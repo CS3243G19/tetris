@@ -1,3 +1,6 @@
+package tetris;
+
+
 public class PlayerSkeleton {
   public int pickMove(State s, int[][] legalMoves) {
 

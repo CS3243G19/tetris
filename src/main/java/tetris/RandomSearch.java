@@ -1,3 +1,5 @@
+package tetris;
+
 public class RandomSearch {
   public int pickMove(State s, int[][] legalMoves) {
     double rand = Math.random();
