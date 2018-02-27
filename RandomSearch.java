@@ -1,5 +1,5 @@
 public class RandomSearch {
-	public int pickMove(State s, int[][] legalMoves) {
+  public int pickMove(State s, int[][] legalMoves) {
     double rand = Math.random();
     return (int) Math.floor(rand * legalMoves.length);
   }
@@ -19,6 +19,6 @@ public class RandomSearch {
       }
     }
     System.out.println("You have completed "+s.getRowsCleared()+" rows.");
-	}
+  }
 
 }
