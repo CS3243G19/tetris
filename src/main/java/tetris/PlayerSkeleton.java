@@ -32,13 +32,15 @@ public class PlayerSkeleton {
     State s = new State();
     new TFrame(s);
     PlayerSkeleton p = new PlayerSkeleton();
+    ArrayList<Feature> features = new ArrayList<Feature>();
+    features.add(new RowsClearedFeature());
+    features.add(new TotalHeightFeature());
+    features.add(new HoleFeature());
+    features.add(new UnevenFeature());
+
+    Heuristic h = new Heuristic(features);
     while(!s.hasLost()) {
-      ArrayList<Feature> features = new ArrayList<Feature>();
-      features.add(new RowsClearedFeature());
-      features.add(new TotalHeightFeature());
-      features.add(new HoleFeature());
-//      features.add(new UnevenFeature());
-      Heuristic h = new Heuristic(features);
+
       s.makeMove(p.pickMove(s,s.legalMoves(), h));
       s.draw();
       s.drawNext(0,0);
