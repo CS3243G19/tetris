@@ -156,12 +156,12 @@ public class State {
   }
 
   public State(State s) {
-    turn = s.getTurnNumber();
-    cleared = s.getRowsCleared();
-    lost = s.hasLost();
-    field = s.getField();
-    top = s.getTop();
-    nextPiece = s.nextPiece;
+    this.turn = s.getTurnNumber();
+    this.cleared = s.getRowsCleared();
+    this.lost = s.hasLost();
+    this.field = s.getField();
+    this.top = s.getTop();
+    this.nextPiece = s.nextPiece;
   }
 
   //random integer, returns 0-6

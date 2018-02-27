@@ -5,26 +5,25 @@ import tetris.State;
 
 
 import java.util.ArrayList;
+import java.util.Random;
 
 
 public class Heuristic {
   private final int size;
-  private ArrayList<Double> weights;
+  private double[] weights;
   private ArrayList<Feature> features;
 
   public Heuristic(ArrayList<Feature> features) {
     this.features = features;
-    this.size = features.size();
-    this.weights = new ArrayList<Double>(this.size);
-    for (int i = 0; i < this.size; i++) {
-      this.weights.set(i, Math.random() * 2 - 1);
-    }
+    this.size = this.features.size();
+    this.weights = new Random().doubles(this.size, -1, 1).toArray();
+
   }
 
   public double getValue(State s) {
     double sum = 0;
     for (int i = 0; i < this.size; i++) {
-      sum += this.weights.get(i) * this.features.get(i).getValue(s);
+      sum += this.weights[i] * this.features.get(i).getValue(s);
     }
 
     return sum;
