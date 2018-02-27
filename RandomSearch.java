@@ -20,5 +20,4 @@ public class RandomSearch {
     }
     System.out.println("You have completed "+s.getRowsCleared()+" rows.");
   }
-
 }
