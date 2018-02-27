@@ -1,10 +1,12 @@
 package tetris.feature;
 
-public class HoleFeature {
-    private int holes = 0;
+import tetris.State;
 
-    @Override
-    public int getValue() {
-        return 0;
-    }
+
+public class HoleFeature extends Feature {
+  @Override
+  public double getValue(State s) {
+    // Please implement
+    return 0;
+  }
 }
