@@ -155,6 +155,15 @@ public class State {
 
   }
 
+  public State(State s) {
+    turn = s.getTurnNumber();
+    cleared = s.getRowsCleared();
+    lost = s.hasLost();
+    field = s.getField();
+    top = s.getTop();
+    nextPiece = s.nextPiece;
+  }
+
   //random integer, returns 0-6
   private int randomPiece() {
     return (int)(Math.random()*N_PIECES);
