@@ -8,12 +8,14 @@ import java.util.ArrayList;
 public class PlayerSkeleton {
   public int pickMove(State s, int[][] legalMoves, Heuristic h) {
 
-    double maxValue = Double.MIN_VALUE;
+    double maxValue = -Double.MAX_VALUE;
+
     int index = -1;
 
     for (int i = 0; i < legalMoves.length; i++) {
       State nextState = new State(s);
       nextState.makeMove(i);
+
       if (nextState.hasLost()) {
         continue;
       }
@@ -23,6 +25,11 @@ public class PlayerSkeleton {
         maxValue = val;
         index = i;
       }
+    }
+
+    // Every move leads to a loss.
+    if (index == -1) {
+      index = 0; // make a random move
     }
 
     return index;
