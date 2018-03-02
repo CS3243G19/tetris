@@ -10,4 +10,4 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 
-script: ./gradlew check --info
+script: ./gradlew check
