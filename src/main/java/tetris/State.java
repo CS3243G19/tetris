@@ -156,12 +156,20 @@ public class State {
   }
 
   public State(State s) {
-    turn = s.getTurnNumber();
-    cleared = s.getRowsCleared();
-    lost = s.hasLost();
-    field = s.getField();
-    top = s.getTop();
-    nextPiece = s.nextPiece;
+    for (int i = 0; i < State.ROWS; i++) {
+			for (int j = 0; j < State.COLS; j++) {
+				field[i][j] = s.getField()[i][j];
+			}
+		}
+
+		for (int i = 0; i < State.COLS; i++) {
+			top[i] = s.getTop()[i];
+		}
+
+    this.turn = s.getTurnNumber();
+    this.cleared = s.getRowsCleared();
+    this.lost = s.hasLost();
+    this.nextPiece = s.getNextPiece();
   }
 
   //random integer, returns 0-6
