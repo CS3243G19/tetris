@@ -7,3 +7,8 @@ apply plugin: "application"
 apply plugin: "checkstyle"
 
 mainClassName = "tetris.PlayerSkeleton"
+
+task score(type: GradleBuild) {
+     mainClassName = "tetris.scorer.Scorer"
+     tasks = ['run']
+}
