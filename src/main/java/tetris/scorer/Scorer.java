@@ -1,5 +1,6 @@
 package tetris.scorer;
 
+import tetris.TFrame;
 import tetris.State;
 import tetris.heuristic.Heuristic;
 import tetris.feature.*;
@@ -8,35 +9,57 @@ import tetris.player.Player;
 import java.util.ArrayList;
 
 public class Scorer {
-  protected int turn;
+  private static final int SLEEPTIME = 300;
+  protected int game;
   public ArrayList<Integer> scores;
-  public Heuristic heuristic;
   public Player player;
 
   public Scorer(Heuristic heuristic) {
-    this.heuristic = heuristic;
     this.player = new Player(heuristic);
     this.scores = new ArrayList<Integer>();
-    this.turn = 0;
+    this.game = 0;
   }
 
   public void play() {
-    turn++;
+    play(false);
+  }
+
+  public void play(boolean graphics) {
+    game++;
     State state = new State();
+    if (graphics) {
+      new TFrame(state);
+    }
     while(!state.hasLost()) {
       int move = player.getMove(state);
       state.makeMove(move);
+
+      if (graphics) {
+        state.draw();
+        state.drawNext(0,0);
+        try {
+          Thread.sleep(SLEEPTIME);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
     }
 
     int score = state.getRowsCleared();
-    System.out.printf("Turn %d: %d\n", turn, score);
+    if (!graphics) {
+      System.out.printf("Game %d: %d\n", game, score);
+    }
     scores.add(score);
+  }
+
+  public int getLatestScore() {
+    return scores.get(scores.size() - 1);
   }
 
   public double getAverageScore() {
     int acc = 0;
     for (Integer i : scores) acc += i;
-    return acc / scores.size();
+    return (double) acc / scores.size();
   }
 
   public static void main(String[] args) {

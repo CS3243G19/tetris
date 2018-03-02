@@ -3,7 +3,7 @@ package tetris;
 import tetris.feature.*;
 import tetris.heuristic.Heuristic;
 
-import tetris.player.Player;
+import tetris.scorer.Scorer;
 
 import java.util.ArrayList;
 
@@ -19,20 +19,8 @@ public class PlayerSkeleton {
     features.add(new UnevenFeature());
 
     Heuristic heuristic = new Heuristic(features);
-    Player player = new Player(heuristic);
-
-    while(!state.hasLost()) {
-      int move = player.getMove(state);
-      state.makeMove(move);
-      state.draw();
-      state.drawNext(0,0);
-      try {
-        Thread.sleep(300);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
-    }
-
-    System.out.println("You have completed "+state.getRowsCleared()+" rows.");
+    Scorer scorer = new Scorer(heuristic);
+    scorer.play(true);
+    System.out.printf("Rows cleared: %d", scorer.getLatestScore());
   }
 }
