@@ -5,6 +5,9 @@ repositories {
 apply plugin: "java"
 apply plugin: "checkstyle"
 
+dependencies {
+  testCompile 'junit:junit:4.12'
+}
 
 task run(type: JavaExec, dependsOn: classes) {
      main = 'tetris.PlayerSkeleton'
@@ -16,3 +19,4 @@ task score(type: JavaExec, dependsOn: classes) {
      classpath = sourceSets.main.runtimeClasspath
      
 }
+
