@@ -8,4 +8,9 @@ public class RowsClearedFeature extends Feature {
   public double getValue(State s) {
     return s.getRowsCleared();
   }
+
+  @Override
+  public boolean equals(Object o) {
+    return o instanceof RowsClearedFeature;
+  }
 }

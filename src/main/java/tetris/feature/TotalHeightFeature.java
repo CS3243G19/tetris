@@ -14,5 +14,8 @@ public class TotalHeightFeature extends Feature {
   	return sum;
   };
 
-
+  @Override
+  public boolean equals(Object o) {
+    return o instanceof TotalHeightFeature;
+  }
 }

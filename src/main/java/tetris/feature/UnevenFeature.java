@@ -12,4 +12,9 @@ public class UnevenFeature extends Feature {
   	}
   	return score;
   };
+
+  @Override
+  public boolean equals(Object o) {
+    return o instanceof UnevenFeature;
+  }
 }

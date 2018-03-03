@@ -7,32 +7,40 @@ import tetris.State;
 import tetris.feature.HoleFeature;
 
 import java.io.File;
+
 import java.io.FileReader;
 import java.io.BufferedReader;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
 import java.io.IOException;
 
+import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
+
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.Random;
+
+import java.util.stream.Collectors;
 
 
 public class Heuristic {
-  private static final HashMap<Integer, Feature> FEATUREMAP = initializeFeatures();
+  private static final HashMap<Integer, Class<?>> FEATUREMAP = initializeFeatures();
   private final int size;
   private double[] weights;
   private ArrayList<Feature> features;
 
-  private static HashMap<Integer, Feature> initializeFeatures() {
-    HashMap<Integer, Feature> map = new HashMap<Integer, Feature>();
-    map.put(1, new HoleFeature());
-    map.put(2, new RowsClearedFeature());
-    map.put(3, new TotalHeightFeature());
-    map.put(4, new UnevenFeature());
+  private static HashMap<Integer, Class<?>> initializeFeatures() {
+    HashMap<Integer, Class<?>> map = new HashMap<Integer, Class<?>>();
+    map.put(1, HoleFeature.class);
+    map.put(2, RowsClearedFeature.class);
+    map.put(3, TotalHeightFeature.class);
+    map.put(4, UnevenFeature.class);
     return map;
   }
 
-  public Heuristic(String filepath) {
-    File file = new File(filepath);
+  public Heuristic(File file) {
     features = new ArrayList<Feature>();
     String[] featureArray = new String[1];
     String[] weightArray = new String[1];
@@ -74,9 +82,13 @@ public class Heuristic {
 
   private void addFeature(String feature) {
     int featIndex = Integer.parseInt(feature);
-    Feature feat = FEATUREMAP.get(featIndex);
+    Class<?> feat = FEATUREMAP.get(featIndex);
     if (feat != null) {
-      features.add(feat);
+      try {
+        features.add((Feature) feat.newInstance());
+      } catch (Exception e) {
+        e.printStackTrace();
+    }
     }
   }
 
@@ -95,5 +107,37 @@ public class Heuristic {
 
   public ArrayList<Feature> getFeatures() {
     return features;
+  }
+
+  public static Integer getFeatureIndex(Feature feature) {
+    for (Entry<Integer, Class<?>> entry: FEATUREMAP.entrySet()) {
+      if(feature.getClass() == entry.getValue()) {
+        return entry.getKey();
+      }
+    }
+    return null;
+  }
+
+  public void save(File file) {
+    StringBuilder stringBuilder = new StringBuilder();
+    List<String> featureString = features.stream()
+                                 .map(feature -> getFeatureIndex(feature).toString())
+                                 .collect(Collectors.toList());
+    stringBuilder.append(String.join(",", featureString));
+    stringBuilder.append("\n");
+    for (int i = 0; i < weights.length; i++) {
+      stringBuilder.append(weights[i]);
+      if (i != weights.length-1) {
+        stringBuilder.append(",");
+      }
+    }
+
+    try {
+      BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+      writer.write(stringBuilder.toString());
+      writer.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 }
