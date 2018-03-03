@@ -3,7 +3,16 @@ repositories {
 }
 
 apply plugin: "java"
-apply plugin: "application"
 apply plugin: "checkstyle"
 
-mainClassName = "tetris.PlayerSkeleton"
+
+task run(type: JavaExec, dependsOn: classes) {
+     main = 'tetris.PlayerSkeleton'
+     classpath = sourceSets.main.runtimeClasspath
+}
+
+task score(type: JavaExec, dependsOn: classes) {
+     main = "tetris.scorer.Scorer"
+     classpath = sourceSets.main.runtimeClasspath
+     
+}
