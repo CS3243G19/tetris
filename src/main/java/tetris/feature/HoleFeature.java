@@ -17,4 +17,9 @@ public class HoleFeature extends Feature {
     }
     return holes;
   }
+
+  @Override
+  public boolean equals(Object o) {
+    return o instanceof HoleFeature;
+  }
 }
