@@ -1,12 +1,15 @@
 package tetris.scorer;
 
-import tetris.TFrame;
-import tetris.State;
-import tetris.heuristic.Heuristic;
-import tetris.feature.*;
-import tetris.player.Player;
-
 import java.util.ArrayList;
+import tetris.State;
+import tetris.TFrame;
+import tetris.feature.Feature;
+import tetris.feature.HoleFeature;
+import tetris.feature.RowsClearedFeature;
+import tetris.feature.TotalHeightFeature;
+import tetris.feature.UnevenFeature;
+import tetris.heuristic.Heuristic;
+import tetris.player.Player;
 
 public class Scorer {
   private static final int SLEEPTIME = 300;

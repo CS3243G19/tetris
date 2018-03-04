@@ -1,28 +1,23 @@
 package tetris.heuristic;
 
-import tetris.feature.Feature;
-import tetris.feature.*;
-
-import tetris.State;
-import tetris.feature.HoleFeature;
-
-import java.io.File;
-
-import java.io.FileReader;
 import java.io.BufferedReader;
-import java.io.FileWriter;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Arrays;
-
-import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
-
 import java.util.stream.Collectors;
+import tetris.State;
+import tetris.feature.Feature;
+import tetris.feature.HoleFeature;
+import tetris.feature.RowsClearedFeature;
+import tetris.feature.TotalHeightFeature;
+import tetris.feature.UnevenFeature;
 
 
 public class Heuristic {

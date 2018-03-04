@@ -1,7 +1,7 @@
 package tetris.player;
 
-import tetris.heuristic.Heuristic;
 import tetris.State;
+import tetris.heuristic.Heuristic;
 
 public class Player {
   public Heuristic heuristic;
