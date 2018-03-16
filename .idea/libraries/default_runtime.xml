@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="default-runtime">
+    <CLASSES>
+      <root url="file:///usr/lib/jvm/default-runtime" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
