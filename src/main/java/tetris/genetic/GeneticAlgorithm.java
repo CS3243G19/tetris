@@ -95,6 +95,9 @@ public class GeneticAlgorithm {
     // We then perform mutation
 
     // We also include some genetic drift to introduce new genes into the population
+    Double[][] newHeuristicArray = new Double[HEURISTICS][FEATURES];
+    Double[] newHeuristicScore = new Double[HEURISTICS];
+
     for (int i = RETENTION + 1; i < HEURISTICS; i++) {
       for (int j = 0; j < FEATURES; j++) {
         heuristicArray[i][j] = r.nextDouble() * 2 - 1.0;
