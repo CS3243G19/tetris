@@ -55,6 +55,6 @@ public class GeneticAlgorithm {
   }
 
   private static void generateNewHeuristics(Double[][] heuristicArray) {
-    
+
   }
 }
