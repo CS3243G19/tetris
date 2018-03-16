@@ -75,6 +75,16 @@ public class Heuristic {
     this.weights = new Random().doubles(this.size, -1, 1).toArray();
   }
 
+  public Heuristic(double[] heuristicArray) {
+    this.features = new ArrayList<>();
+    for (Integer i = 0; i < FEATUREMAP.size(); i++) {
+      addFeature(i.toString());
+    }
+    this.size = this.features.size();
+    this.weights = heuristicArray;
+
+  }
+
   private void addFeature(String feature) {
     int featIndex = Integer.parseInt(feature);
     Class<?> feat = FEATUREMAP.get(featIndex);
