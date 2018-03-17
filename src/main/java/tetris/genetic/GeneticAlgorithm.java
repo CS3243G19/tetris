@@ -134,7 +134,7 @@ public class GeneticAlgorithm {
       newHeuristicArray[i] = heuristicArray[i];
     }
 
-    // We keep our fittest individual heuristicArray[0] in our population
+    // We keep our fittest SURVIVAL individuals  in our population
     // We perform crossing over for a fixed number of individuals, as defined in RETENTION
     for (int i = SURVIVAL; i < RETENTION + SURVIVAL; i++) {
       Integer winner1 = naturalSelection();
@@ -224,7 +224,7 @@ public class GeneticAlgorithm {
     Double curr = Double.NEGATIVE_INFINITY;
     for (int i = 0; i < SELECTION; i++) {
       Random r = new Random();
-      Integer next = r.nextInt(heuristicArray.length);
+      Integer next = r.nextInt(HEURISTICS);
       Double score = heuristicArray[next].getScore();
       if (score > curr) {
         curr = score;

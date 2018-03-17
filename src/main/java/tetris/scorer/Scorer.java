@@ -72,7 +72,7 @@ public class Scorer {
 //    features.add(new HoleFeature());
 //    features.add(new UnevenFeature());
 //
-//    Heuristic heuristic = new Heuristic(features);
+//    Heuristic heuristic = new Heurist ic(features);
 //
 //    Scorer scorer = new Scorer(heuristic);
 //
