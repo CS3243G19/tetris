@@ -1,5 +1,10 @@
 package tetris.genetic;
 
+import tetris.feature.Feature;
+import tetris.feature.HoleFeature;
+import tetris.feature.RowsClearedFeature;
+import tetris.feature.TotalHeightFeature;
+import tetris.feature.UnevenFeature;
 import tetris.heuristic.Heuristic;
 import tetris.scorer.Scorer;
 
@@ -14,24 +19,31 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.stream.Stream;
 
 public class GeneticAlgorithm {
 
-  public static final Integer FEATURES = 4;
-  public static final Integer HEURISTICS = 100;
-  public static final Double MUTATION_RATE = 0.25;
-  public static final Integer RETENTION = 75;
-  public static final Integer SELECTION = 10;
-  public static final Double DEFAULT_SCORE = 0.0;
-  public static final Integer SURVIVAL = 15;
+  private static final int NUM_GAMES = 100;
+  private static final ArrayList<Feature> FEATURES = new ArrayList<>();
+  private static final Integer POPULATION_SIZE = 100;
+  private static final Double MUTATION_RATE = 0.25;
+  private static final Integer RETENTION = 75;
+  private static final Integer SELECTION = 10;
+  private static final Double DEFAULT_SCORE = 0.0;
+  private static final Integer SURVIVAL = 15;
 
   private static WeightScorePair[] heuristicArray;
   private static Integer currIteration;
 
   public static void main(String[] args) {
+    FEATURES.add(new HoleFeature());
+    FEATURES.add(new RowsClearedFeature());
+    FEATURES.add(new TotalHeightFeature());
+    FEATURES.add(new UnevenFeature());
+
     File newFile = new File("heuristics.txt");
     if (!newFile.exists()) {
       try {
@@ -40,9 +52,9 @@ public class GeneticAlgorithm {
         e.printStackTrace();
       }
     }
-    heuristicArray = new WeightScorePair[HEURISTICS];
+    heuristicArray = new WeightScorePair[POPULATION_SIZE];
 
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < POPULATION_SIZE; i++) {
       try {
         heuristicArray = readHeuristics();
         generateNewHeuristics();
@@ -55,14 +67,14 @@ public class GeneticAlgorithm {
 
   private static WeightScorePair[] readHeuristics() throws IOException {
     BufferedReader bufferedReader = new BufferedReader(new FileReader("heuristics.txt"));
-    WeightScorePair[] resultArr = new WeightScorePair[HEURISTICS];
+    WeightScorePair[] resultArr = new WeightScorePair[POPULATION_SIZE];
     String[] iteration = bufferedReader.readLine().split(" ");
     currIteration = Integer.parseInt(iteration[1]);
 
     String[] weightArray;
-    for (int i = 0; i < HEURISTICS; i++) {
+    for (int i = 0; i < POPULATION_SIZE; i++) {
       weightArray = bufferedReader.readLine().split(",");
-      Double[] weight = new Double[FEATURES];
+      Double[] weight = new Double[FEATURES.size()];
       Double score = 0.0;
       for (int j = 0; j < weightArray.length; j++) {
         if (j==weightArray.length-1) {
@@ -82,11 +94,11 @@ public class GeneticAlgorithm {
 
   private static void initialiseHeuristics() throws IOException {
     Random r = new Random();
-    heuristicArray = new WeightScorePair[HEURISTICS];
+    heuristicArray = new WeightScorePair[POPULATION_SIZE];
     for (int i = 0; i < heuristicArray.length; i++) {
       Double score = 0.0;
-      Double[] weight = new Double[FEATURES];
-      for (int j = 0; j < FEATURES; j++) {
+      Double[] weight = new Double[FEATURES.size()];
+      for (int j = 0; j < FEATURES.size(); j++) {
           weight[j] = r.nextDouble() * 2 - 1.0;
       }
       WeightScorePair curr = new WeightScorePair(weight,score);
@@ -116,7 +128,7 @@ public class GeneticAlgorithm {
   private static void writeToFile(BufferedWriter writer, WeightScorePair[] heuristicArray) throws IOException {
     for (int i = 0; i < heuristicArray.length; i++) {
       WeightScorePair curr = heuristicArray[i];
-      for (int j = 0; j < FEATURES; j++) {
+      for (int j = 0; j < FEATURES.size(); j++) {
         Double[] weight = curr.getWeight();
         writer.write(weight[j].toString() + ",");
       }
@@ -128,7 +140,7 @@ public class GeneticAlgorithm {
 
   private static void generateNewHeuristics() throws Exception {
     Random r = new Random();
-    WeightScorePair[] newHeuristicArray = new WeightScorePair[HEURISTICS];
+    WeightScorePair[] newHeuristicArray = new WeightScorePair[POPULATION_SIZE];
 
     for (int i = 0; i < SURVIVAL; i++) {
       newHeuristicArray[i] = heuristicArray[i];
@@ -151,9 +163,9 @@ public class GeneticAlgorithm {
     mutate();
 
     // We also include some genetic drift to introduce new genes into the population
-    for (int i = RETENTION + SURVIVAL ; i < HEURISTICS; i++) {
-      Double[] weight = new Double[FEATURES];
-      for (int j = 0; j < FEATURES; j++) {
+    for (int i = RETENTION + SURVIVAL; i < POPULATION_SIZE; i++) {
+      Double[] weight = new Double[FEATURES.size()];
+      for (int j = 0; j < FEATURES.size(); j++) {
         weight[j] = r.nextDouble() * 2 - 1.0;
       }
       newHeuristicArray[i] = new WeightScorePair(weight, DEFAULT_SCORE);
@@ -166,17 +178,18 @@ public class GeneticAlgorithm {
   }
 
   private static void score() {
-    for (int i = 0; i < HEURISTICS; i++) {
+    for (int i = 0; i < POPULATION_SIZE; i++) {
       WeightScorePair curr = heuristicArray[i];
       Double[] weight = curr.getWeight();
       double[] heurArr = Stream.of(weight).mapToDouble(Double::doubleValue).toArray();
-      Heuristic currHeuristic = new Heuristic(heurArr);
+      Heuristic currHeuristic = new Heuristic(FEATURES, heurArr);
       Scorer scorer = new Scorer(currHeuristic);
-      for (int j = 0; j < 100; j++) {
+      for (int j = 0; j < NUM_GAMES; j++) {
         scorer.play();
       }
       Double averageScore = scorer.getAverageScore();
 
+      System.out.printf("Average Score: %f\n", averageScore);
       WeightScorePair scored = new WeightScorePair(weight, averageScore);
       heuristicArray[i] = scored;
     }
@@ -188,10 +201,10 @@ public class GeneticAlgorithm {
     for (int i = 1; i < RETENTION+1; i ++) {
       WeightScorePair curr = heuristicArray[i];
       Double[] currWeight = curr.getWeight();
-      for (int j = 0; j < FEATURES; j++) {
+      for (int j = 0; j < FEATURES.size(); j++) {
         Double mutChance = r.nextDouble();
-        if (mutChance <= MUTATION_RATE) {
-          currWeight[j] = currWeight[j] + (r.nextDouble() * 2 - 1.0) / (currIteration + 1);
+        if (mutChance > MUTATION_RATE) {
+          currWeight[j] = currWeight[j] + (r.nextDouble() * 2 - 1.0) / (currIteration + 1) / 10;
         }
       }
       WeightScorePair result = new WeightScorePair(currWeight, DEFAULT_SCORE);
@@ -205,9 +218,9 @@ public class GeneticAlgorithm {
     Double[] weight1 = heuristic1.getWeight();
     Double[] weight2 = heuristic2.getWeight();
     Double crossoverRate = score1.doubleValue() /(score1.doubleValue() + score2.doubleValue());
-    Double[] resultHeuristics = new Double[FEATURES];
+    Double[] resultHeuristics = new Double[FEATURES.size()];
 
-    for (int i = 0; i < FEATURES; i++) {
+    for (int i = 0; i < FEATURES.size(); i++) {
       Random r = new Random();
       Double next = r.nextDouble();
       if (next <= crossoverRate) {

@@ -49,9 +49,7 @@ public class Scorer {
     }
 
     int score = state.getRowsCleared();
-    if (!graphics) {
-      System.out.printf("Game %d: %d\n", game, score);
-    }
+
     scores.add(score);
   }
 
