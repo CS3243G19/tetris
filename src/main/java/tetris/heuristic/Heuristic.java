@@ -75,11 +75,8 @@ public class Heuristic {
     this.weights = new Random().doubles(this.size, -1, 1).toArray();
   }
 
-  public Heuristic(double[] heuristicArray) {
-    this.features = new ArrayList<>();
-    for (Integer i = 1; i <= FEATUREMAP.size(); i++) {
-      addFeature(i.toString());
-    }
+  public Heuristic(ArrayList<Feature> features, double[] heuristicArray) {
+    this.features = features;
     this.size = this.features.size();
     this.weights = heuristicArray;
 
