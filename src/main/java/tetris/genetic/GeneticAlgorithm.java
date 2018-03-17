@@ -23,17 +23,17 @@ import java.util.stream.Stream;
 
 public class GeneticAlgorithm {
 
-  public static final Integer NUM_GENERATIONS = 100;
+  private static final Integer NUM_GENERATIONS = 100;
 
-  public static final Integer FEATURES = 4;
-  public static final Integer POPULATION_SIZE = 100;
+  private static final Integer FEATURES = 4;
+  private static final Integer POPULATION_SIZE = 100;
 
-  public static final Double MUTATION_RATE = 0.1;
-  public static final Integer SELECTION = 10;
-  public static final Double DEFAULT_SCORE = 0.0;
+  private static final Double MUTATION_RATE = 0.1;
+  private static final Integer SELECTION = 10;
+  private static final Double DEFAULT_SCORE = 0.0;
 
-  public static final Integer SURVIVORS = 15;
-  public static final Integer CROSSED_OVER = 75;
+  private static final Integer SURVIVORS = 15;
+  private static final Integer CROSSED_OVER = 75;
 
   private WeightScorePair[] heuristicArray;
   private Integer currIteration;
