@@ -65,21 +65,21 @@ public class Scorer {
     return (double) acc / scores.size();
   }
 
-  public static void main(String[] args) {
-    ArrayList<Feature> features = new ArrayList<Feature>();
-    features.add(new RowsClearedFeature());
-    features.add(new TotalHeightFeature());
-    features.add(new HoleFeature());
-    features.add(new UnevenFeature());
-
-    Heuristic heuristic = new Heuristic(features);
-
-    Scorer scorer = new Scorer(heuristic);
-
-    for (int i = 0; i < 100; i++) {
-      scorer.play();
-    }
-
-    System.out.printf("Average Score: %f", scorer.getAverageScore());
-  }
+//  public static void main(String[] args) {
+//    ArrayList<Feature> features = new ArrayList<Feature>();
+//    features.add(new RowsClearedFeature());
+//    features.add(new TotalHeightFeature());
+//    features.add(new HoleFeature());
+//    features.add(new UnevenFeature());
+//
+//    Heuristic heuristic = new Heuristic(features);
+//
+//    Scorer scorer = new Scorer(heuristic);
+//
+//    for (int i = 0; i < 100; i++) {
+//      scorer.play();
+//    }
+//
+//    System.out.printf("Average Score: %f", scorer.getAverageScore());
+//  }
 }
