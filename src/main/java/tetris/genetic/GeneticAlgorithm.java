@@ -23,6 +23,8 @@ import java.util.stream.Stream;
 
 public class GeneticAlgorithm {
 
+  public static final Integer NUM_GENERATIONS = 100;
+
   public static final Integer FEATURES = 4;
   public static final Integer POPULATION_SIZE = 100;
 
@@ -48,7 +50,7 @@ public class GeneticAlgorithm {
     }
     ga.heuristicArray = new WeightScorePair[POPULATION_SIZE];
 
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < NUM_GENERATIONS; i++) {
       try {
         ga.heuristicArray = ga.readHeuristics();
         ga.generateNewHeuristics();
@@ -170,29 +172,6 @@ public class GeneticAlgorithm {
 
   }
 
-
-  private class HeuristicRunner implements Runnable {
-    private int id;
-
-    public void setId (int id) {
-      this.id = id;
-    }
-
-    public void run() {
-      WeightScorePair curr = heuristicArray[id];
-      Double[] weight = curr.getWeight();
-      double[] heurArr = Stream.of(weight).mapToDouble(Double::doubleValue).toArray();
-      Heuristic currHeuristic = new Heuristic(heurArr);
-      Scorer scorer = new Scorer(currHeuristic);
-      for (int j = 0; j < 100; j++) {
-        scorer.play();
-      }
-      Double averageScore = scorer.getAverageScore();
-      WeightScorePair scored = new WeightScorePair(weight, averageScore);
-      heuristicArray[id] = scored;
-    }
-  }
-
   private void score() throws Exception {
 
     ExecutorService executor = Executors.newFixedThreadPool(POPULATION_SIZE);
@@ -260,5 +239,25 @@ public class GeneticAlgorithm {
     return result;
   }
 
+  private class HeuristicRunner implements Runnable {
+    private int id;
 
+    public void setId (int id) {
+      this.id = id;
+    }
+
+    public void run() {
+      WeightScorePair curr = heuristicArray[id];
+      Double[] weight = curr.getWeight();
+      double[] heurArr = Stream.of(weight).mapToDouble(Double::doubleValue).toArray();
+      Heuristic currHeuristic = new Heuristic(heurArr);
+      Scorer scorer = new Scorer(currHeuristic);
+      for (int j = 0; j < 100; j++) {
+        scorer.play();
+      }
+      Double averageScore = scorer.getAverageScore();
+      WeightScorePair scored = new WeightScorePair(weight, averageScore);
+      heuristicArray[id] = scored;
+    }
+  }
 }
