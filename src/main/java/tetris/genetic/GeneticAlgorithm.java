@@ -17,6 +17,8 @@ public class GeneticAlgorithm {
   public static final Integer DRIFT = HEURISTICS - RETENTION - 1;
   public static final Integer SELECTION = 5;
 
+  private static WeightScorePair[] heuristicArray;
+
   public static void main(String[] args) {
     File newFile = new File("heuristics.txt");
     if (!newFile.exists()) {
@@ -26,37 +28,43 @@ public class GeneticAlgorithm {
         e.printStackTrace();
       }
     }
-    Double[][] heuristicArray = new Double[HEURISTICS][FEATURES];
-    Double[] heuristicScore = new Double[HEURISTICS];
+    heuristicArray = new WeightScorePair[HEURISTICS];
     try {
-      readHeuristics(heuristicScore, heuristicArray);
-      generateNewHeuristics(heuristicScore, heuristicArray);
+      readHeuristics();
+      generateNewHeuristics();
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
-  private static void readHeuristics(Double[] heuristicScore, Double[][] heuristicArray) throws IOException {
+  private static void readHeuristics() throws IOException {
     BufferedReader bufferedReader = new BufferedReader(new FileReader("heuristics.txt"));
+
     String[] weightArray;
     for (int i = 0; i < heuristicArray.length; i++) {
       weightArray = bufferedReader.readLine().split(",");
+      Double[] weight = new Double[FEATURES];
+      Double score = 0.0;
       for (int j = 0; j < weightArray.length; j++) {
         if (j==weightArray.length-1) {
-          heuristicScore[i] = Double.parseDouble(weightArray[j]);
+          score = Double.parseDouble(weightArray[j]);
         } else {
-          heuristicArray[i][j] = Double.parseDouble(weightArray[j]);
+          weight[j] = Double.parseDouble(weightArray[j]);
         }
       }
+
+      // We create the new WeightScorePair and store the result
+      WeightScorePair result = new WeightScorePair(weight,score);
+      heuristicArray[i] = result;
     }
     bufferedReader.close();
   }
 
   private static void initialiseHeuristics() throws IOException {
     Random r = new Random();
-    Double[][] heuristicArray = new Double[HEURISTICS][FEATURES+1];
+    heuristicArray = new WeightScorePair[HEURISTICS];
     for (int i = 0; i < heuristicArray.length; i++) {
-      for (int j = 0; j < heuristicArray[0].length; j++) {
+      for (int j = 0; j < FEATURES; j++) {
         if (j==4) {
           heuristicArray[i][j] = 0.0;
         } else {
