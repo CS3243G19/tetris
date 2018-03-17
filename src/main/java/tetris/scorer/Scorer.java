@@ -1,6 +1,9 @@
 package tetris.scorer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.stream.Stream;
+
 import tetris.State;
 import tetris.TFrame;
 import tetris.feature.Feature;
@@ -50,7 +53,7 @@ public class Scorer {
 
     int score = state.getRowsCleared();
     if (!graphics) {
-      System.out.printf("Game %d: %d\n", game, score);
+//      System.out.printf("Game %d: %d\n", game, score);
     }
     scores.add(score);
   }
@@ -65,21 +68,24 @@ public class Scorer {
     return (double) acc / scores.size();
   }
 
-//  public static void main(String[] args) {
-//    ArrayList<Feature> features = new ArrayList<Feature>();
-//    features.add(new RowsClearedFeature());
-//    features.add(new TotalHeightFeature());
-//    features.add(new HoleFeature());
-//    features.add(new UnevenFeature());
-//
-//    Heuristic heuristic = new Heurist ic(features);
-//
-//    Scorer scorer = new Scorer(heuristic);
-//
-//    for (int i = 0; i < 100; i++) {
-//      scorer.play();
-//    }
-//
-//    System.out.printf("Average Score: %f", scorer.getAverageScore());
-//  }
+  public static void main(String[] args) {
+    ArrayList<Feature> features = new ArrayList<Feature>();
+    features.add(new RowsClearedFeature());
+    features.add(new TotalHeightFeature());
+    features.add(new HoleFeature());
+    features.add(new UnevenFeature());
+
+//    Heuristic heuristic = new Heuristic(features);
+      double[] weights = new double[]{-0.1460619774980445, 0.6884459840936763, -0.6934259121093835,  -0.3890744379988762};
+      Heuristic heuristic = new Heuristic(weights);
+
+    Scorer scorer = new Scorer(heuristic);
+
+    for (int i = 0; i < 100; i++) {
+      scorer.play();
+    }
+
+    System.out.println(Arrays.toString(heuristic.getWeights()));
+    System.out.printf("Average Score: %f", scorer.getAverageScore());
+  }
 }

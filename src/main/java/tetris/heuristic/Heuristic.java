@@ -77,7 +77,7 @@ public class Heuristic {
 
   public Heuristic(double[] heuristicArray) {
     this.features = new ArrayList<>();
-    for (Integer i = 0; i < FEATUREMAP.size(); i++) {
+    for (Integer i = 1; i <= FEATUREMAP.size(); i++) {
       addFeature(i.toString());
     }
     this.size = this.features.size();
