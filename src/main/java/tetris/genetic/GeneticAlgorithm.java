@@ -1,6 +1,23 @@
 package tetris.genetic;
 
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 import tetris.feature.Feature;
 import tetris.feature.HoleFeature;
 import tetris.feature.RowsClearedFeature;
@@ -8,26 +25,6 @@ import tetris.feature.TotalHeightFeature;
 import tetris.feature.UnevenFeature;
 import tetris.heuristic.Heuristic;
 import tetris.scorer.Scorer;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-
-import java.security.SecureRandom;
-import java.util.Arrays;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.ArrayList;
-import java.util.stream.Stream;
 
 public class GeneticAlgorithm {
 
