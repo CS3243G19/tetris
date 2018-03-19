@@ -279,8 +279,7 @@ public class GeneticAlgorithm {
     public void run() {
       WeightScorePair curr = heuristicArray[id];
       Double[] weight = curr.getWeight();
-      double[] heurArr = Stream.of(weight).mapToDouble(Double::doubleValue).toArray();
-      Heuristic currHeuristic = new Heuristic(FEATURES, heurArr);
+      Heuristic currHeuristic = new Heuristic(FEATURES, weight);
       Scorer scorer = new Scorer(currHeuristic);
       for (int j = 0; j < NUM_GAMES; j++) {
         scorer.play();

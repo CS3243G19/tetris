@@ -23,7 +23,7 @@ import tetris.feature.UnevenFeature;
 public class Heuristic {
   private static final HashMap<Integer, Class<?>> FEATUREMAP = initializeFeatures();
   private final int size;
-  private double[] weights;
+  private Double[] weights;
   private ArrayList<Feature> features;
 
   private static HashMap<Integer, Class<?>> initializeFeatures() {
@@ -55,7 +55,7 @@ public class Heuristic {
     }
 
     this.size = featureArray.length;
-    this.weights = new double[this.size];
+    this.weights = new Double[this.size];
     for (int i = 0; i < weightArray.length; i++) {
       this.weights[i] = (Double.parseDouble(weightArray[i]));
     }
@@ -72,10 +72,14 @@ public class Heuristic {
   public Heuristic(ArrayList<Feature> features) {
     this.features = features;
     this.size = this.features.size();
-    this.weights = new Random().doubles(this.size, -1, 1).toArray();
+    Random r = new Random();
+    this.weights = new Double[this.size];
+    for (int i = 0; i < this.size; i++) {
+      this.weights[i] = r.nextDouble();
+    }
   }
 
-  public Heuristic(ArrayList<Feature> features, double[] heuristicArray) {
+  public Heuristic(ArrayList<Feature> features, Double[] heuristicArray) {
     this.features = features;
     this.size = this.features.size();
     this.weights = heuristicArray;
@@ -103,7 +107,7 @@ public class Heuristic {
     return sum;
   }
 
-  public double[] getWeights() {
+  public Double[] getWeights() {
     return weights;
   }
 
@@ -118,28 +122,5 @@ public class Heuristic {
       }
     }
     return null;
-  }
-
-  public void save(File file) {
-    StringBuilder stringBuilder = new StringBuilder();
-    List<String> featureString = features.stream()
-                                 .map(feature -> getFeatureIndex(feature).toString())
-                                 .collect(Collectors.toList());
-    stringBuilder.append(String.join(",", featureString));
-    stringBuilder.append("\n");
-    for (int i = 0; i < weights.length; i++) {
-      stringBuilder.append(weights[i]);
-      if (i != weights.length-1) {
-        stringBuilder.append(",");
-      }
-    }
-
-    try {
-      BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-      writer.write(stringBuilder.toString());
-      writer.close();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
   }
 }
