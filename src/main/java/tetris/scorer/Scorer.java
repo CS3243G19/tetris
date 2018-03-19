@@ -1,16 +1,9 @@
 package tetris.scorer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.stream.Stream;
 
 import tetris.State;
 import tetris.TFrame;
-import tetris.feature.Feature;
-import tetris.feature.HoleFeature;
-import tetris.feature.RowsClearedFeature;
-import tetris.feature.TotalHeightFeature;
-import tetris.feature.UnevenFeature;
 import tetris.heuristic.Heuristic;
 import tetris.player.Player;
 
