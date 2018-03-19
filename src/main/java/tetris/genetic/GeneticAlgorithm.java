@@ -200,6 +200,20 @@ public class GeneticAlgorithm {
     executor.shutdown();
     executor.awaitTermination(1000, TimeUnit.MINUTES);
 
+//    for (int i = 0; i < POPULATION_SIZE; i++) {
+//      WeightScorePair curr = heuristicArray[i];
+//      Double[] weight = curr.getWeight();
+//      double[] heurArr = Stream.of(weight).mapToDouble(Double::doubleValue).toArray();
+//      Heuristic currHeuristic = new Heuristic(FEATURES, heurArr);
+//      Scorer scorer = new Scorer(currHeuristic);
+//      for (int j = 0; j < NUM_GAMES; j++) {
+//        scorer.play();
+//      }
+//      Double averageScore = scorer.getAverageScore();
+//      WeightScorePair scored = new WeightScorePair(weight, averageScore);
+//      heuristicArray[i] = scored;
+//    }
+
     Arrays.sort(heuristicArray);
   }
 
@@ -211,7 +225,7 @@ public class GeneticAlgorithm {
       for (int j = 0; j < FEATURES.size(); j++) {
         Double mutChance = r.nextDouble();
         if (mutChance <= MUTATION_RATE) {
-          currWeight[j] = currWeight[j] + (r.nextDouble() * 2 - 1.0) / (currIteration + 1)/10;
+          currWeight[j] = currWeight[j] + (r.nextDouble() * 2 - 1.0);
         }
       }
       WeightScorePair result = new WeightScorePair(currWeight, DEFAULT_SCORE);
@@ -272,6 +286,7 @@ public class GeneticAlgorithm {
         scorer.play();
       }
       Double averageScore = scorer.getAverageScore();
+      System.out.println(averageScore);
       WeightScorePair scored = new WeightScorePair(weight, averageScore);
       heuristicArray[id] = scored;
     }
