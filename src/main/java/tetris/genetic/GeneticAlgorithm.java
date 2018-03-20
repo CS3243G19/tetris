@@ -31,7 +31,7 @@ import java.util.concurrent.*;
 public class GeneticAlgorithm {
 
   private static final Integer NUM_GENERATIONS = 100;
-  private static final Integer NUM_GAMES = 100;
+  private static final Integer NUM_GAMES = 50;
 
   private static final Double MUTATION_RATE = 0.1;
   private static final Integer SELECTION = 5;
