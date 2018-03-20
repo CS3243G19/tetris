@@ -17,10 +17,11 @@ import tetris.feature.TotalHeightFeature;
 import tetris.feature.UnevenFeature;
 
 
-public class Heuristic {
+public class Heuristic implements Comparable<Heuristic>{
   private static final HashMap<Integer, Class<?>> FEATUREMAP = initializeFeatures();
   private final int size;
   private Double[] weights;
+  private Double score;
   private ArrayList<Feature> features;
 
   private static HashMap<Integer, Class<?>> initializeFeatures() {
@@ -76,10 +77,11 @@ public class Heuristic {
     }
   }
 
-  public Heuristic(ArrayList<Feature> features, Double[] heuristicArray) {
+  public Heuristic(ArrayList<Feature> features, Double[] heuristicArray, Double score) {
     this.features = features;
     this.size = this.features.size();
     this.weights = heuristicArray;
+    this.score = score;
 
   }
 
@@ -108,6 +110,15 @@ public class Heuristic {
     return weights;
   }
 
+  public void setScore(Double score) {
+    this.score = score;
+  }
+
+
+  public Double getScore() {
+    return score;
+  }
+
   public ArrayList<Feature> getFeatures() {
     return features;
   }
@@ -119,5 +130,11 @@ public class Heuristic {
       }
     }
     return null;
+  }
+
+  @Override
+  public int compareTo (Heuristic o) {
+    // We invert for decremental sorting
+    return Double.compare(o.getScore(), this.getScore());
   }
 }

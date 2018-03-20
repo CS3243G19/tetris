@@ -203,7 +203,7 @@ public class State {
     //for each column beyond the first in the piece
     for(int c = 1; c < pWidth[nextPiece][orient];c++) {
       if (slot + c >= 10) {
-        System.out.println("FUCK YOU");
+        System.out.println("SLOT and C are awry");
       }
       height = Math.max(height,top[slot+c]-pBottom[nextPiece][orient][c]);
     }
