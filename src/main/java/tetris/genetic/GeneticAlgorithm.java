@@ -178,7 +178,6 @@ public class GeneticAlgorithm {
 
       Double[] resultWeight = crossover(heuristic1, heuristic2);
       Heuristic result = new Heuristic(FEATURES, resultWeight,DEFAULT_SCORE);
-      getScore(result);
       newHeuristicArray[i] = result;
     }
 
@@ -192,7 +191,6 @@ public class GeneticAlgorithm {
         weight[j] = r.nextDouble() * 2 - 1.0;
       }
       Heuristic newIndividual = new Heuristic(FEATURES, weight, DEFAULT_SCORE);
-      getScore(newIndividual);
       newHeuristicArray[i] = newIndividual;
     }
 
@@ -200,15 +198,6 @@ public class GeneticAlgorithm {
     heuristicArray = newHeuristicArray;
     score();
 
-  }
-
-  private void getScore(Heuristic heuristic) {
-    Scorer scorer = new Scorer(heuristic);
-    for (int i = 0; i < NUM_GAMES; i++) {
-      scorer.play();
-    }
-    Double score = scorer.getAverageScore();
-    heuristic.setScore(score);
   }
 
   /** We thread this for each heuristic, which will each play games as shown in HeuristicRunner
