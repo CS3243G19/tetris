@@ -37,7 +37,7 @@ public class GeneticAlgorithm {
   private static final Double MUTATION_RATE = 0.1;
   private static final Double DEFAULT_SCORE = 0.0;
 
-  private static final Integer SURVIVORS = 15;
+  private static final Integer SURVIVORS = 5;
   private static final Integer CROSSED_OVER = 75;
 
   private static final ArrayList<Feature> FEATURES = new ArrayList<>();
@@ -205,16 +205,6 @@ public class GeneticAlgorithm {
    */
   private void score() throws Exception {
 
-//    ForkJoinPool pool = new ForkJoinPool(POPULATION_SIZE);
-//    for (int i = 0; i < POPULATION_SIZE; i++) {
-//      HeuristicRunner runner = new HeuristicRunner();
-//      runner.setId(i);
-//      pool.execute(runner);
-//    }
-//
-//    pool.shutdown();
-//    pool.awaitTermination(1000, TimeUnit.MINUTES);
-
     ExecutorService executor = Executors.newFixedThreadPool(100);
 
     for (int i = 0; i < POPULATION_SIZE; i++) {
@@ -226,42 +216,6 @@ public class GeneticAlgorithm {
     }
     executor.shutdown();
     executor.awaitTermination(1000, TimeUnit.MINUTES);
-
-    // Below code is for testing purposes, to be removed
-//    for (int i = 0; i < POPULATION_SIZE; i++) {
-//      Heuristic curr = heuristicArray[i];
-//      Double[] weight = curr.getWeight();
-//      double[] heurArr = Stream.of(weight).mapToDouble(Double::doubleValue).toArray();
-//      Heuristic currHeuristic = new Heuristic(FEATURES, heurArr);
-//      ArrayList<Future<Integer>> scores = new ArrayList<>();
-//      Double totalScore = 0.0;
-//      ExecutorService executor = Executors.newFixedThreadPool(NUM_GAMES);
-//
-//      for (int j = 0; j < NUM_GAMES; j++) {
-//        Scorer scorer = new Scorer(currHeuristic);
-//
-//        GameRunner gameRunner = new GameRunner(scorer);
-//        Future<Integer> result = executor.submit(gameRunner);
-//        scores.add(result);
-//
-//      }
-//
-//      executor.shutdown();
-//      executor.awaitTermination(1000, TimeUnit.MINUTES);
-//
-//      for (int j = 0; j < scores.size(); j++) {
-//        if (scores.get(j).isCancelled()) {
-//          System.out.println("BOOHOO");
-//        }
-//
-//        totalScore += scores.get(j).get();
-//      }
-//
-//      Double averageScore = totalScore / NUM_GAMES;
-//      System.out.println("Average Score is: " + averageScore);
-//      Heuristic scored = new Heuristic(weight, averageScore);
-//      heuristicArray[i] = scored;
-//    }
 
     Arrays.sort(heuristicArray);
   }
