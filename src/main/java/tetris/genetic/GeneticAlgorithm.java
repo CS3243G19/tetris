@@ -31,18 +31,16 @@ import java.util.concurrent.*;
 public class GeneticAlgorithm {
 
   private static final Integer NUM_GENERATIONS = 100;
-  private static final Integer NUM_GAMES = 50;
+  private static final Integer NUM_GAMES = 10;
+  private static final Integer POPULATION_SIZE = 200;
 
   private static final Double MUTATION_RATE = 0.1;
-  private static final Integer SELECTION = 5;
   private static final Double DEFAULT_SCORE = 0.0;
 
   private static final Integer SURVIVORS = 15;
   private static final Integer CROSSED_OVER = 75;
 
   private static final ArrayList<Feature> FEATURES = new ArrayList<>();
-  private static final Integer POPULATION_SIZE = 100;
-
   private Heuristic[] heuristicArray;
   private Integer currIteration;
 
@@ -173,8 +171,8 @@ public class GeneticAlgorithm {
     // We keep our fittest SURVIVORS individuals  in our population
     // We perform crossing over for a fixed number of individuals, as defined in CROSSED_OVER
     for (int i = SURVIVORS; i < CROSSED_OVER + SURVIVORS; i++) {
-      Integer winner1 = naturalSelection();
-      Integer winner2 = naturalSelection();
+      Integer winner1 = randomSelection();
+      Integer winner2 = randomSelection();
       Heuristic heuristic1 = heuristicArray[winner1];
       Heuristic heuristic2 = heuristicArray[winner2];
 
@@ -314,25 +312,58 @@ public class GeneticAlgorithm {
     return resultHeuristics;
   }
 
-  /** This is a method for us to choose random members of a population, and pick the fittest among them
-   * as the mate
+  /** We pick the parent randomly, through a normalised random selection
    *
    * @return individual
    */
-  private Integer naturalSelection() {
+  private Integer randomSelection() {
     Integer result = 0;
-    Double curr = Double.NEGATIVE_INFINITY;
-    for (int i = 0; i < SELECTION; i++) {
-      Random r = new Random();
-      Integer next = r.nextInt(POPULATION_SIZE);
-      Double score = heuristicArray[next].getScore();
-      if (score > curr) {
-        curr = score;
-        result = next;
+    Double [] fitnessValues = new Double[POPULATION_SIZE];
+
+    for (int i = 0; i < POPULATION_SIZE; i++) {
+      fitnessValues[i] = heuristicArray[i].getScore();
+    }
+
+    fitnessValues = normalize(fitnessValues);
+    System.out.println(fitnessValues[fitnessValues.length-1]);
+    Random r = new Random();
+    Double prob = r.nextDouble();
+    Double currTotal = 0.0;
+
+    for (int i = 0; i < fitnessValues.length; i++) {
+      currTotal += fitnessValues[i];
+      if (prob <= currTotal) {
+        result = i;
+        break;
       }
     }
 
     return result;
+  }
+
+
+  /** Full credit to aimacode/aima-java
+   *
+   * @param probDist
+   * @return
+   */
+  public Double[] normalize(Double[] probDist) {
+    int len = probDist.length;
+    Double total = 0.0;
+    for (Double d : probDist) {
+      total = total + d;
+    }
+    Double[] normalized = new Double[len];
+    for (int i = 0; i < normalized.length; i++) {
+      normalized[i] = 0.0;
+    }
+    if (total != 0) {
+      for (int i = 0; i < len; i++) {
+        normalized[i] = probDist[i] / total;
+      }
+    }
+
+    return normalized;
   }
 
   /** We create a runnable, which will play the games using a Scorer
