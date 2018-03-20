@@ -17,7 +17,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import com.sun.org.apache.bcel.internal.generic.POP;
 import tetris.feature.Feature;
 import tetris.feature.HoleFeature;
 import tetris.feature.RowsClearedFeature;
@@ -74,6 +73,11 @@ public class GeneticAlgorithm {
     }
   }
 
+  /** We read heuristics from heuristics.txt, and parse it into a Heuristic[]
+   *
+   * @return
+   * @throws IOException
+   */
   private Heuristic[] readHeuristics() throws IOException {
     BufferedReader bufferedReader = new BufferedReader(new FileReader("heuristics.txt"));
     Heuristic[] resultArr = new Heuristic[POPULATION_SIZE];
@@ -101,6 +105,10 @@ public class GeneticAlgorithm {
     return resultArr;
   }
 
+  /** We create random heuristics, if there is no existing heuristics.txt
+   *
+   * @throws IOException
+   */
   private void initialiseHeuristics() throws IOException {
     Random r = new Random();
     heuristicArray = new Heuristic[POPULATION_SIZE];
@@ -121,6 +129,10 @@ public class GeneticAlgorithm {
     writer.close();
   }
 
+  /** We use this method to save our new heuristics, while appending old iterations to the text file
+   *
+   * @throws IOException
+   */
   private void saveHeuristics() throws IOException {
     BufferedWriter writer = new BufferedWriter(new FileWriter("temp.txt"));
     writer.write("Iteration " + (currIteration + 1));
@@ -146,6 +158,10 @@ public class GeneticAlgorithm {
 
   }
 
+  /** Our primary method of obtaining our next set of heuristics
+   *
+   * @throws Exception
+   */
   private void generateNewHeuristics() throws Exception {
     Random r = new Random();
     Heuristic[] newHeuristicArray = new Heuristic[POPULATION_SIZE];
@@ -185,6 +201,10 @@ public class GeneticAlgorithm {
 
   }
 
+  /** We thread this for each heuristic, which will each play games as shown in HeuristicRunner
+   *
+   * @throws Exception
+   */
   private void score() throws Exception {
 
 //    ForkJoinPool pool = new ForkJoinPool(POPULATION_SIZE);
@@ -209,6 +229,7 @@ public class GeneticAlgorithm {
     executor.shutdown();
     executor.awaitTermination(1000, TimeUnit.MINUTES);
 
+    // Below code is for testing purposes, to be removed
 //    for (int i = 0; i < POPULATION_SIZE; i++) {
 //      Heuristic curr = heuristicArray[i];
 //      Double[] weight = curr.getWeight();
@@ -247,7 +268,7 @@ public class GeneticAlgorithm {
     Arrays.sort(heuristicArray);
   }
 
-  /** Randomly mutates all members in a population
+  /** Randomly mutates all members in a population, based on chance
    *
    */
   private void mutate() {
@@ -329,7 +350,7 @@ public class GeneticAlgorithm {
     }
 
     public void run() {
- 
+
       for (int j = 0; j < NUM_GAMES; j++) {
         scorer.play();
       }
