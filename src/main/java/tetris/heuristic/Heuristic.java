@@ -1,17 +1,15 @@
 package tetris.heuristic;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Map.Entry;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map.Entry;
 import java.util.Random;
-import java.util.stream.Collectors;
+
+import tetris.NextState;
 import tetris.State;
 import tetris.feature.Feature;
 import tetris.feature.HoleFeature;
@@ -20,10 +18,11 @@ import tetris.feature.TotalHeightFeature;
 import tetris.feature.UnevenFeature;
 
 
-public class Heuristic {
+public class Heuristic implements Comparable<Heuristic>{
   private static final HashMap<Integer, Class<?>> FEATUREMAP = initializeFeatures();
   private final int size;
-  private double[] weights;
+  private Double[] weights;
+  private Double score;
   private ArrayList<Feature> features;
 
   private static HashMap<Integer, Class<?>> initializeFeatures() {
@@ -55,7 +54,7 @@ public class Heuristic {
     }
 
     this.size = featureArray.length;
-    this.weights = new double[this.size];
+    this.weights = new Double[this.size];
     for (int i = 0; i < weightArray.length; i++) {
       this.weights[i] = (Double.parseDouble(weightArray[i]));
     }
@@ -72,13 +71,18 @@ public class Heuristic {
   public Heuristic(ArrayList<Feature> features) {
     this.features = features;
     this.size = this.features.size();
-    this.weights = new Random().doubles(this.size, -1, 1).toArray();
+    Random r = new Random();
+    this.weights = new Double[this.size];
+    for (int i = 0; i < this.size; i++) {
+      this.weights[i] = r.nextDouble();
+    }
   }
 
-  public Heuristic(ArrayList<Feature> features, double[] heuristicArray) {
+  public Heuristic(ArrayList<Feature> features, Double[] heuristicArray, Double score) {
     this.features = features;
     this.size = this.features.size();
     this.weights = heuristicArray;
+    this.score = score;
 
   }
 
@@ -94,7 +98,7 @@ public class Heuristic {
     }
   }
 
-  public double getValue(State s) {
+  public double getValue(NextState s) {
     double sum = 0;
     for (int i = 0; i < this.size; i++) {
       sum += this.weights[i] * this.features.get(i).getValue(s);
@@ -103,8 +107,17 @@ public class Heuristic {
     return sum;
   }
 
-  public double[] getWeights() {
+  public Double[] getWeights() {
     return weights;
+  }
+
+  public void setScore(Double score) {
+    this.score = score;
+  }
+
+
+  public Double getScore() {
+    return score;
   }
 
   public ArrayList<Feature> getFeatures() {
@@ -120,26 +133,9 @@ public class Heuristic {
     return null;
   }
 
-  public void save(File file) {
-    StringBuilder stringBuilder = new StringBuilder();
-    List<String> featureString = features.stream()
-                                 .map(feature -> getFeatureIndex(feature).toString())
-                                 .collect(Collectors.toList());
-    stringBuilder.append(String.join(",", featureString));
-    stringBuilder.append("\n");
-    for (int i = 0; i < weights.length; i++) {
-      stringBuilder.append(weights[i]);
-      if (i != weights.length-1) {
-        stringBuilder.append(",");
-      }
-    }
-
-    try {
-      BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-      writer.write(stringBuilder.toString());
-      writer.close();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+  @Override
+  public int compareTo (Heuristic o) {
+    // We invert for decremental sorting
+    return Double.compare(o.getScore(), this.getScore());
   }
 }

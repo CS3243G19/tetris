@@ -1,10 +1,11 @@
 package tetris.feature;
 
+import tetris.NextState;
 import tetris.State;
 
 public class UnevenFeature extends Feature {
   @Override
-  public double getValue(State s) {
+  public double getValue(NextState s) {
   	int highest[] = s.getTop();
   	double score = 0;
   	for (int i = 1; i < State.COLS; i++) {

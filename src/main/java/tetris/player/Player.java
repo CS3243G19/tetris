@@ -1,5 +1,6 @@
 package tetris.player;
 
+import tetris.NextState;
 import tetris.State;
 import tetris.heuristic.Heuristic;
 
@@ -17,8 +18,9 @@ public class Player {
     int index = -1;
 
     for (int i = 0; i < legalMoves.length; i++) {
-      State nextState = new State(s);
-      nextState.makeMove(i);
+      NextState nextState = new NextState(s);
+
+      nextState.makeMove(i, legalMoves);
 
       if (nextState.hasLost()) {
         continue;

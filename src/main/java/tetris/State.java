@@ -172,7 +172,7 @@ public class State {
     this.nextPiece = s.getNextPiece();
   }
 
-  //random integer, returns 0-6
+  //random integer, returns 0-/**/6
   private int randomPiece() {
     return (int)(Math.random()*N_PIECES);
   }
@@ -202,6 +202,9 @@ public class State {
     int height = top[slot]-pBottom[nextPiece][orient][0];
     //for each column beyond the first in the piece
     for(int c = 1; c < pWidth[nextPiece][orient];c++) {
+      if (slot + c >= 10) {
+        System.out.println("SLOT and C are awry");
+      }
       height = Math.max(height,top[slot+c]-pBottom[nextPiece][orient][c]);
     }
 
@@ -259,8 +262,6 @@ public class State {
 
     //pick a new piece
     nextPiece = randomPiece();
-
-
 
     return true;
   }

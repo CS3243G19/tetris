@@ -1,10 +1,11 @@
 package tetris.feature;
 
+import tetris.NextState;
 import tetris.State;
 
 public class HoleFeature extends Feature {
   @Override
-  public double getValue(State s) {
+  public double getValue(NextState s) {
     int highest[] = s.getTop();
     int holes = 0;
     int[][] field = s.getField();

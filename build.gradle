@@ -14,8 +14,8 @@ task run(type: JavaExec, dependsOn: classes) {
      classpath = sourceSets.main.runtimeClasspath
 }
 
-task score(type: JavaExec, dependsOn: classes) {
-     main = "tetris.scorer.Scorer"
+task ga(type: JavaExec, dependsOn: classes) {
+     main = "tetris.genetic.GeneticAlgorithm"
      classpath = sourceSets.main.runtimeClasspath
      
 }

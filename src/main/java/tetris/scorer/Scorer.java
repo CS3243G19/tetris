@@ -1,13 +1,9 @@
 package tetris.scorer;
 
 import java.util.ArrayList;
+
 import tetris.State;
 import tetris.TFrame;
-import tetris.feature.Feature;
-import tetris.feature.HoleFeature;
-import tetris.feature.RowsClearedFeature;
-import tetris.feature.TotalHeightFeature;
-import tetris.feature.UnevenFeature;
 import tetris.heuristic.Heuristic;
 import tetris.player.Player;
 
@@ -49,7 +45,9 @@ public class Scorer {
     }
 
     int score = state.getRowsCleared();
-
+    if (!graphics) {
+//      System.out.printf("Game %d: %d\n", game, score);
+    }
     scores.add(score);
   }
 
@@ -63,21 +61,4 @@ public class Scorer {
     return (double) acc / scores.size();
   }
 
-//  public static void main(String[] args) {
-//    ArrayList<Feature> features = new ArrayList<Feature>();
-//    features.add(new RowsClearedFeature());
-//    features.add(new TotalHeightFeature());
-//    features.add(new HoleFeature());
-//    features.add(new UnevenFeature());
-//
-//    Heuristic heuristic = new Heuristic(features);
-//
-//    Scorer scorer = new Scorer(heuristic);
-//
-//    for (int i = 0; i < 100; i++) {
-//      scorer.play();
-//    }
-//
-//    System.out.printf("Average Score: %f", scorer.getAverageScore());
-//  }
 }
