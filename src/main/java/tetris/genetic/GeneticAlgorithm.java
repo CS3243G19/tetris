@@ -31,13 +31,13 @@ import java.util.concurrent.*;
 public class GeneticAlgorithm {
 
   private static final Integer NUM_GENERATIONS = 100;
-  private static final Integer NUM_GAMES = 10;
-  private static final Integer POPULATION_SIZE = 200;
+  private static final Integer NUM_GAMES = 100;
+  private static final Integer POPULATION_SIZE = 100;
 
-  private static final Double MUTATION_RATE = 0.1;
+  private static final Double MUTATION_RATE = 0.25;
   private static final Double DEFAULT_SCORE = 0.0;
 
-  private static final Integer SURVIVORS = 5;
+  private static final Integer SURVIVORS = 1;
   private static final Integer CROSSED_OVER = 75;
 
   private static final ArrayList<Feature> FEATURES = new ArrayList<>();
@@ -96,7 +96,7 @@ public class GeneticAlgorithm {
       }
 
       // We create the new Heuristic and store the result
-      Heuristic result = new Heuristic(FEATURES, weight, DEFAULT_SCORE);
+      Heuristic result = new Heuristic(FEATURES, weight, score);
       resultArr[i] = result;
     }
     bufferedReader.close();
@@ -228,13 +228,14 @@ public class GeneticAlgorithm {
     for (int i = 0; i < POPULATION_SIZE; i ++) {
       Heuristic curr = heuristicArray[i];
       Double[] currWeight = curr.getWeights();
+      Double currScore = curr.getScore();
       for (int j = 0; j < FEATURES.size(); j++) {
         Double mutChance = r.nextDouble();
         if (mutChance <= MUTATION_RATE) {
           currWeight[j] = currWeight[j] + (r.nextDouble() * 2 - 1.0);
         }
       }
-      Heuristic result = new Heuristic(FEATURES, currWeight, DEFAULT_SCORE);
+      Heuristic result = new Heuristic(FEATURES, currWeight, currScore);
       heuristicArray[i] = result;
     }
   }
@@ -279,7 +280,6 @@ public class GeneticAlgorithm {
     }
 
     fitnessValues = normalize(fitnessValues);
-    System.out.println(fitnessValues[fitnessValues.length-1]);
     Random r = new Random();
     Double prob = r.nextDouble();
     Double currTotal = 0.0;
@@ -291,7 +291,6 @@ public class GeneticAlgorithm {
         break;
       }
     }
-
     return result;
   }
 
@@ -304,9 +303,10 @@ public class GeneticAlgorithm {
   public Double[] normalize(Double[] probDist) {
     int len = probDist.length;
     Double total = 0.0;
-    for (Double d : probDist) {
-      total = total + d;
+    for (int i = 0; i < len; i++) {
+      total = total + probDist[i];
     }
+
     Double[] normalized = new Double[len];
     for (int i = 0; i < normalized.length; i++) {
       normalized[i] = 0.0;
@@ -340,7 +340,7 @@ public class GeneticAlgorithm {
         scorer.play();
       }
       Double averageScore = scorer.getAverageScore();
-      System.out.println(averageScore);
+      System.out.println("Average Score is: " + averageScore);
       this.heuristic.setScore(averageScore);
       heuristicArray[id] = this.heuristic;
     }
