@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import tetris.NextState;
 import tetris.State;
 import tetris.feature.Feature;
 import tetris.feature.HoleFeature;
@@ -97,7 +98,7 @@ public class Heuristic implements Comparable<Heuristic>{
     }
   }
 
-  public double getValue(State s) {
+  public double getValue(NextState s) {
     double sum = 0;
     for (int i = 0; i < this.size; i++) {
       sum += this.weights[i] * this.features.get(i).getValue(s);
