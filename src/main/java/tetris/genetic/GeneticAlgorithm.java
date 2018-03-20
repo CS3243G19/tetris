@@ -31,14 +31,14 @@ import java.util.concurrent.*;
 public class GeneticAlgorithm {
 
   private static final Integer NUM_GENERATIONS = 100;
-  private static final Integer NUM_GAMES = 100;
-  private static final Integer POPULATION_SIZE = 100;
+  private static final Integer NUM_GAMES = 10;
+  private static final Integer POPULATION_SIZE = 500;
 
   private static final Double MUTATION_RATE = 0.25;
   private static final Double DEFAULT_SCORE = 0.0;
 
   private static final Integer SURVIVORS = 1;
-  private static final Integer CROSSED_OVER = 75;
+  private static final Integer CROSSED_OVER = 150;
 
   private static final ArrayList<Feature> FEATURES = new ArrayList<>();
   private Heuristic[] heuristicArray;
@@ -63,7 +63,7 @@ public class GeneticAlgorithm {
     for (int i = 0; i < NUM_GENERATIONS; i++) {
       try {
         ga.heuristicArray = ga.readHeuristics();
-        ga.generateNewHeuristics();
+        ga.generateNextGeneration();
         ga.saveHeuristics();
       } catch (Exception e) {
         e.printStackTrace();
@@ -160,7 +160,7 @@ public class GeneticAlgorithm {
    *
    * @throws Exception
    */
-  private void generateNewHeuristics() throws Exception {
+  private void generateNextGeneration() throws Exception {
     Random r = new Random();
     Heuristic[] newHeuristicArray = new Heuristic[POPULATION_SIZE];
 
@@ -178,6 +178,7 @@ public class GeneticAlgorithm {
 
       Double[] resultWeight = crossover(heuristic1, heuristic2);
       Heuristic result = new Heuristic(FEATURES, resultWeight,DEFAULT_SCORE);
+      getScore(result);
       newHeuristicArray[i] = result;
     }
 
@@ -190,13 +191,24 @@ public class GeneticAlgorithm {
       for (int j = 0; j < FEATURES.size(); j++) {
         weight[j] = r.nextDouble() * 2 - 1.0;
       }
-      newHeuristicArray[i] = new Heuristic(FEATURES, weight, DEFAULT_SCORE);
+      Heuristic newIndividual = new Heuristic(FEATURES, weight, DEFAULT_SCORE);
+      getScore(newIndividual);
+      newHeuristicArray[i] = newIndividual;
     }
 
     // Finally, we test the fitness of these new heuristics
     heuristicArray = newHeuristicArray;
     score();
 
+  }
+
+  private void getScore(Heuristic heuristic) {
+    Scorer scorer = new Scorer(heuristic);
+    for (int i = 0; i < NUM_GAMES; i++) {
+      scorer.play();
+    }
+    Double score = scorer.getAverageScore();
+    heuristic.setScore(score);
   }
 
   /** We thread this for each heuristic, which will each play games as shown in HeuristicRunner
@@ -253,6 +265,7 @@ public class GeneticAlgorithm {
     Double[] weight1 = heuristic1.getWeights();
     Double[] weight2 = heuristic2.getWeights();
     Double crossoverRate = score1.doubleValue() /(score1.doubleValue() + score2.doubleValue());
+//    Double crossoverRate = 0.5;
     Double[] resultHeuristics = new Double[FEATURES.size()];
 
     for (int i = 0; i < FEATURES.size(); i++) {
@@ -291,6 +304,7 @@ public class GeneticAlgorithm {
         break;
       }
     }
+    System.out.println("And the result is: " + result);
     return result;
   }
 
