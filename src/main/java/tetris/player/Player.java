@@ -18,6 +18,7 @@ public class Player {
 
     for (int i = 0; i < legalMoves.length; i++) {
       State nextState = new State(s);
+
       nextState.makeMove(i);
 
       if (nextState.hasLost()) {
