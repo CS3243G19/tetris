@@ -181,11 +181,12 @@ public class GeneticAlgorithm {
 
       Double[] resultWeight = crossover(heuristic1, heuristic2);
       Heuristic result = new Heuristic(FEATURES, resultWeight,DEFAULT_SCORE);
+      Double mutChance = r.nextDouble();
+      if (mutChance <= MUTATION_RATE) {
+        result = mutate(result, r);
+      }
       newHeuristicArray[i] = result;
     }
-
-    // We then perform mutation
-    mutate(newHeuristicArray);
 
     // We also include some genetic drift to introduce new genes into the population
     for (int i = CROSSED_OVER + SURVIVORS; i < POPULATION_SIZE; i++) {
@@ -227,12 +228,9 @@ public class GeneticAlgorithm {
   /** Randomly mutates all members in a population, based on chance
    *
    */
-  private void mutate(Heuristic[] heuristicArray) {
-    Random r = new Random();
-    for (int i = SURVIVORS; i < SURVIVORS + CROSSED_OVER ; i ++) {
-      Heuristic curr = heuristicArray[i];
-      Double[] currWeight = curr.getWeights();
-      Double currScore = curr.getScore();
+  private Heuristic mutate(Heuristic heuristic, Random r) {
+      Double[] currWeight = heuristic.getWeights();
+      Double currScore = heuristic.getScore();
       for (int j = 0; j < FEATURES.size(); j++) {
         Double mutChance = r.nextDouble();
         if (mutChance <= MUTATION_RATE) {
@@ -240,8 +238,7 @@ public class GeneticAlgorithm {
         }
       }
       Heuristic result = new Heuristic(FEATURES, currWeight, currScore);
-      heuristicArray[i] = result;
-    }
+      return result;
   }
 
   /** We pick 2 heuristics, and do a weighted crossover based on their scores. Higher scores have a greater chance
