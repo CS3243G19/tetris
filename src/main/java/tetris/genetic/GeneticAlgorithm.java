@@ -30,9 +30,9 @@ import java.util.concurrent.*;
 
 public class GeneticAlgorithm {
 
-  private static final Integer NUM_GENERATIONS = 100;
+  private static final Integer NUM_GENERATIONS = 1000;
   private static final Integer NUM_GAMES = 100;
-  private static final Integer POPULATION_SIZE = 500;
+  private static final Integer POPULATION_SIZE = 1000;
 
   private static final Double MUTATION_RATE = 0.1;
   private static final Double DEFAULT_SCORE = 0.0;
@@ -226,7 +226,7 @@ public class GeneticAlgorithm {
    */
   private void mutate(Heuristic[] heuristicArray) {
     Random r = new Random();
-    for (int i = 0; i < SURVIVORS + CROSSED_OVER ; i ++) {
+    for (int i = SURVIVORS; i < SURVIVORS + CROSSED_OVER ; i ++) {
       Heuristic curr = heuristicArray[i];
       Double[] currWeight = curr.getWeights();
       Double currScore = curr.getScore();
@@ -253,8 +253,8 @@ public class GeneticAlgorithm {
     Double score2 = heuristic2.getScore();
     Double[] weight1 = heuristic1.getWeights();
     Double[] weight2 = heuristic2.getWeights();
-    Double crossoverRate = score1.doubleValue() /(score1.doubleValue() + score2.doubleValue());
-//    Double crossoverRate = 0.5;
+//    Double crossoverRate = score1.doubleValue() /(score1.doubleValue() + score2.doubleValue());
+    Double crossoverRate = 0.5;
     Double[] resultHeuristics = new Double[FEATURES.size()];
 
     for (int i = 0; i < FEATURES.size(); i++) {
