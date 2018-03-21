@@ -293,7 +293,6 @@ public class GeneticAlgorithm {
         break;
       }
     }
-    System.out.println("And the result is: " + result);
     return result;
   }
 
