@@ -65,6 +65,7 @@ public class GeneticAlgorithm {
         ga.heuristicArray = ga.readHeuristics();
         System.out.println("Iteration " + ga.currIteration);
         ga.generateNextGeneration();
+        System.out.println("Best Heuristic" + Arrays.toString(ga.heuristicArray[0].getWeights()));
         ga.saveHeuristics();
       } catch (Exception e) {
         e.printStackTrace();
