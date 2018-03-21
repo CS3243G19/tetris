@@ -65,7 +65,8 @@ public class GeneticAlgorithm {
         ga.heuristicArray = ga.readHeuristics();
         System.out.println("Iteration " + ga.currIteration);
         ga.generateNextGeneration();
-        System.out.println("Best Heuristic" + Arrays.toString(ga.heuristicArray[0].getWeights()));
+        System.out.println("Best Heuristic: " + Arrays.toString(ga.heuristicArray[0].getWeights()));
+        System.out.println("Score: " + ga.heuristicArray[0].getScore());
         ga.saveHeuristics();
       } catch (Exception e) {
         e.printStackTrace();
@@ -255,8 +256,8 @@ public class GeneticAlgorithm {
     Double score2 = heuristic2.getScore();
     Double[] weight1 = heuristic1.getWeights();
     Double[] weight2 = heuristic2.getWeights();
-//    Double crossoverRate = score1.doubleValue() /(score1.doubleValue() + score2.doubleValue());
-    Double crossoverRate = 0.5;
+    Double crossoverRate = score1.doubleValue() /(score1.doubleValue() + score2.doubleValue());
+//    Double crossoverRate = 0.5;
     Double[] resultHeuristics = new Double[FEATURES.size()];
 
     for (int i = 0; i < FEATURES.size(); i++) {
