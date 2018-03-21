@@ -63,6 +63,7 @@ public class GeneticAlgorithm {
     for (int i = 0; i < NUM_GENERATIONS; i++) {
       try {
         ga.heuristicArray = ga.readHeuristics();
+        System.out.println("Iteration " + ga.currIteration);
         ga.generateNextGeneration();
         ga.saveHeuristics();
       } catch (Exception e) {
@@ -342,7 +343,7 @@ public class GeneticAlgorithm {
         scorer.play();
       }
       Double averageScore = scorer.getAverageScore();
-      System.out.println("Average Score is: " + averageScore);
+//      System.out.println("Average Score is: " + averageScore);
       this.heuristic.setScore(averageScore);
       heuristicArray[id] = this.heuristic;
     }
