@@ -31,14 +31,14 @@ import java.util.concurrent.*;
 public class GeneticAlgorithm {
 
   private static final Integer NUM_GENERATIONS = 100;
-  private static final Integer NUM_GAMES = 10;
+  private static final Integer NUM_GAMES = 100;
   private static final Integer POPULATION_SIZE = 500;
 
-  private static final Double MUTATION_RATE = 0.25;
+  private static final Double MUTATION_RATE = 0.1;
   private static final Double DEFAULT_SCORE = 0.0;
 
   private static final Integer SURVIVORS = 1;
-  private static final Integer CROSSED_OVER = 150;
+  private static final Integer CROSSED_OVER = ((int) Math.floor(POPULATION_SIZE / 3));
 
   private static final ArrayList<Feature> FEATURES = new ArrayList<>();
   private Heuristic[] heuristicArray;
@@ -182,7 +182,7 @@ public class GeneticAlgorithm {
     }
 
     // We then perform mutation
-    mutate();
+    mutate(newHeuristicArray);
 
     // We also include some genetic drift to introduce new genes into the population
     for (int i = CROSSED_OVER + SURVIVORS; i < POPULATION_SIZE; i++) {
@@ -224,9 +224,9 @@ public class GeneticAlgorithm {
   /** Randomly mutates all members in a population, based on chance
    *
    */
-  private void mutate() {
+  private void mutate(Heuristic[] heuristicArray) {
     Random r = new Random();
-    for (int i = 0; i < POPULATION_SIZE; i ++) {
+    for (int i = 0; i < SURVIVORS + CROSSED_OVER ; i ++) {
       Heuristic curr = heuristicArray[i];
       Double[] currWeight = curr.getWeights();
       Double currScore = curr.getScore();
