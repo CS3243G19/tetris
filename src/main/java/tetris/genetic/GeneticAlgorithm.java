@@ -30,15 +30,15 @@ import java.util.concurrent.*;
 
 public class GeneticAlgorithm {
 
-  private static final Integer NUM_GENERATIONS = 100;
-  private static final Integer NUM_GAMES = 10;
-  private static final Integer POPULATION_SIZE = 500;
+  private static final Integer NUM_GENERATIONS = 1000;
+  private static final Integer NUM_GAMES = 100;
+  private static final Integer POPULATION_SIZE = 1000;
 
-  private static final Double MUTATION_RATE = 0.25;
+  private static final Double MUTATION_RATE = 0.1;
   private static final Double DEFAULT_SCORE = 0.0;
 
   private static final Integer SURVIVORS = 1;
-  private static final Integer CROSSED_OVER = 150;
+  private static final Integer CROSSED_OVER = ((int) Math.floor(POPULATION_SIZE / 3));
 
   private static final ArrayList<Feature> FEATURES = new ArrayList<>();
   private Heuristic[] heuristicArray;
@@ -63,7 +63,10 @@ public class GeneticAlgorithm {
     for (int i = 0; i < NUM_GENERATIONS; i++) {
       try {
         ga.heuristicArray = ga.readHeuristics();
+        System.out.println("Iteration " + ga.currIteration);
         ga.generateNextGeneration();
+        System.out.println("Best Heuristic: " + Arrays.toString(ga.heuristicArray[0].getWeights()));
+        System.out.println("Score: " + ga.heuristicArray[0].getScore());
         ga.saveHeuristics();
       } catch (Exception e) {
         e.printStackTrace();
@@ -178,11 +181,12 @@ public class GeneticAlgorithm {
 
       Double[] resultWeight = crossover(heuristic1, heuristic2);
       Heuristic result = new Heuristic(FEATURES, resultWeight,DEFAULT_SCORE);
+      Double mutChance = r.nextDouble();
+      if (mutChance <= MUTATION_RATE) {
+        result = mutate(result, r);
+      }
       newHeuristicArray[i] = result;
     }
-
-    // We then perform mutation
-    mutate();
 
     // We also include some genetic drift to introduce new genes into the population
     for (int i = CROSSED_OVER + SURVIVORS; i < POPULATION_SIZE; i++) {
@@ -224,12 +228,9 @@ public class GeneticAlgorithm {
   /** Randomly mutates all members in a population, based on chance
    *
    */
-  private void mutate() {
-    Random r = new Random();
-    for (int i = 0; i < POPULATION_SIZE; i ++) {
-      Heuristic curr = heuristicArray[i];
-      Double[] currWeight = curr.getWeights();
-      Double currScore = curr.getScore();
+  private Heuristic mutate(Heuristic heuristic, Random r) {
+      Double[] currWeight = heuristic.getWeights();
+      Double currScore = heuristic.getScore();
       for (int j = 0; j < FEATURES.size(); j++) {
         Double mutChance = r.nextDouble();
         if (mutChance <= MUTATION_RATE) {
@@ -237,8 +238,7 @@ public class GeneticAlgorithm {
         }
       }
       Heuristic result = new Heuristic(FEATURES, currWeight, currScore);
-      heuristicArray[i] = result;
-    }
+      return result;
   }
 
   /** We pick 2 heuristics, and do a weighted crossover based on their scores. Higher scores have a greater chance
@@ -293,7 +293,6 @@ public class GeneticAlgorithm {
         break;
       }
     }
-    System.out.println("And the result is: " + result);
     return result;
   }
 
@@ -343,7 +342,7 @@ public class GeneticAlgorithm {
         scorer.play();
       }
       Double averageScore = scorer.getAverageScore();
-      System.out.println("Average Score is: " + averageScore);
+//      System.out.println("Average Score is: " + averageScore);
       this.heuristic.setScore(averageScore);
       heuristicArray[id] = this.heuristic;
     }
