@@ -117,7 +117,7 @@ public class GeneticAlgorithm {
       Double score = 0.0;
       Double[] weight = new Double[FEATURES.size()];
       for (int j = 0; j < FEATURES.size(); j++) {
-          weight[j] = r.nextDouble() * 2 - 1.0;
+        weight[j] = r.nextDouble() * 2 - 1.0;
       }
       Heuristic curr = new Heuristic(FEATURES, weight,score);
       heuristicArray[i] = curr;
@@ -181,10 +181,7 @@ public class GeneticAlgorithm {
 
       Double[] resultWeight = crossover(heuristic1, heuristic2);
       Heuristic result = new Heuristic(FEATURES, resultWeight,DEFAULT_SCORE);
-      Double mutChance = r.nextDouble();
-      if (mutChance <= MUTATION_RATE) {
-        result = mutate(result, r);
-      }
+      result = mutate(result, r);
       newHeuristicArray[i] = result;
     }
 
@@ -229,16 +226,16 @@ public class GeneticAlgorithm {
    *
    */
   private Heuristic mutate(Heuristic heuristic, Random r) {
-      Double[] currWeight = heuristic.getWeights();
-      Double currScore = heuristic.getScore();
-      for (int j = 0; j < FEATURES.size(); j++) {
-        Double mutChance = r.nextDouble();
-        if (mutChance <= MUTATION_RATE) {
-          currWeight[j] = currWeight[j] + (r.nextDouble() * 2 - 1.0);
-        }
+    Double[] currWeight = heuristic.getWeights();
+    Double currScore = heuristic.getScore();
+    for (int j = 0; j < FEATURES.size(); j++) {
+      Double mutChance = r.nextDouble();
+      if (mutChance <= MUTATION_RATE) {
+        currWeight[j] = currWeight[j] + (r.nextDouble() * 2 - 1.0);
       }
-      Heuristic result = new Heuristic(FEATURES, currWeight, currScore);
-      return result;
+    }
+    Heuristic result = new Heuristic(FEATURES, currWeight, currScore);
+    return result;
   }
 
   /** We pick 2 heuristics, and do a weighted crossover based on their scores. Higher scores have a greater chance
