@@ -181,10 +181,7 @@ public class GeneticAlgorithm {
 
       Double[] resultWeight = crossover(heuristic1, heuristic2);
       Heuristic result = new Heuristic(FEATURES, resultWeight,DEFAULT_SCORE);
-      Double mutChance = r.nextDouble();
-      if (mutChance <= MUTATION_RATE) {
-        result = mutate(result, r);
-      }
+      result = mutate(result, r);
       newHeuristicArray[i] = result;
     }
 
