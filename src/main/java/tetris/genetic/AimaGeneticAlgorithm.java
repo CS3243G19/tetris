@@ -99,11 +99,11 @@ public class AimaGeneticAlgorithm {
             Future<Double> score = executor.submit(runner);
             futureScores.add(score);
         }
-
+        
         for (int k = 0; k < futureScores.size(); k++) {
             try {
                 Double score = futureScores.get(k).get();
-                System.out.printf("Individual %i: %f\n", k, score);
+                System.out.printf("Individual %d: %f\n", k, score);
                 this.scores.set(k, score);
             } catch(Exception e) {
                 e.printStackTrace();
