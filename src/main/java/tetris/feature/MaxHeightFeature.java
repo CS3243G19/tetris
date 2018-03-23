@@ -2,7 +2,7 @@ package tetris.feature;
 
 import tetris.NextState;
 
-public class MaxHeightFeature {
+public class MaxHeightFeature extends Feature{
     @Override
     public double getValue(NextState s) {
         int maxHeight = 0;
@@ -13,6 +13,6 @@ public class MaxHeightFeature {
                 maxHeight = curr;
             }
         }
-        return maxHeight;
+        return (double) maxHeight;
     }
 }

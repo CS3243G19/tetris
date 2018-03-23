@@ -13,13 +13,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import tetris.feature.Feature;
-import tetris.feature.HoleFeature;
-import tetris.feature.HoleSquaredFeature;
-import tetris.feature.MaxHoleHeightFeature;
-import tetris.feature.RowsClearedFeature;
-import tetris.feature.TotalHeightFeature;
-import tetris.feature.UnevenFeature;
+import tetris.feature.*;
 import tetris.heuristic.Heuristic;
 import tetris.scorer.Scorer;
 
@@ -41,6 +35,8 @@ public class AimaGeneticAlgorithm {
         FEATURES.add(new RowsClearedFeature());
         FEATURES.add(new TotalHeightFeature());
         FEATURES.add(new UnevenFeature());
+        FEATURES.add(new MaxHeightFeature());
+        FEATURES.add(new BlocksOnHoleFeature());
 
         this.population = newRandomPopulation();
 
