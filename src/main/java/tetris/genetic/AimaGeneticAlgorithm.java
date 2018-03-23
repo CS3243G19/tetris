@@ -134,7 +134,7 @@ public class AimaGeneticAlgorithm {
 
         double[] fValues  = new double[population.size()];
         for (int i = 0; i < population.size(); i++) {
-            fValues[i] = scores[i];
+            fValues[i] = scores.get(i);
         }
 
         fValues = normalize(fValues);
@@ -173,15 +173,16 @@ public class AimaGeneticAlgorithm {
         int best = bestIndividual();
         System.out.println("Iteration: " + currIteration);
         System.out.println("Best Individual: " + population.get(best).getWeights());
-        System.out.println("Score: " + scores[best]);
+        System.out.println("Score: " + scores.get(best));
     }
 
     private int bestIndividual() {
         int index = -1;
         double max = - Double.MAX_VALUE;
-        for (int i = 0; i < scores.length; i++) {
-            if (scores[i] > max) {
-                max = scores[i];
+        for (int i = 0; i < scores.size(); i++) {
+            Double score = scores.get(i);
+            if (score > max) {
+                max = score;
                 index = i;
             }
         }
