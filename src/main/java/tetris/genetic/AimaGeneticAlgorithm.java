@@ -87,28 +87,27 @@ public class AimaGeneticAlgorithm {
 
     private void playGames() {
         List<Future<Double>> futureScores = new ArrayList<>();
-        for (int i = 0; i < POPULATION_SIZE; i++) {
-            ExecutorService executor = Executors.newFixedThreadPool(100);
 
-            for (int j = 0; j < POPULATION_SIZE; j++) {
-                Heuristic individual = population.get(j);
-                HeuristicRunner runner = new HeuristicRunner(individual);
-                Future<Double> score = executor.submit(runner);
-                futureScores.add(score);
-            }
+        ExecutorService executor = Executors.newFixedThreadPool(100);
 
-            for (int k = 0; k < futureScores.size(); k++) {
-                try {
-                    Double score = futureScores.get(k).get();
-                    System.out.println("k: " + k + " Score:" + score);
-                    this.scores.set(k, score);
-                } catch(Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            executor.shutdown();
+        for (int j = 0; j < POPULATION_SIZE; j++) {
+            Heuristic individual = population.get(j);
+            HeuristicRunner runner = new HeuristicRunner(individual);
+            Future<Double> score = executor.submit(runner);
+            futureScores.add(score);
         }
+
+        for (int k = 0; k < futureScores.size(); k++) {
+            try {
+                Double score = futureScores.get(k).get();
+                System.out.println("k: " + k + " Score:" + score);
+                this.scores.set(k, score);
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        executor.shutdown();
     }
 
     private Heuristic reproduce(Heuristic x, Heuristic y) {
