@@ -27,9 +27,8 @@ import java.util.concurrent.*;
 public class GeneticAlgorithm {
 
   private static final Integer NUM_GENERATIONS = 1000;
-  private static final Integer NUM_GAMES = 100;
-  private static final Integer POPULATION_SIZE = 1000;
-
+  private static final Integer NUM_GAMES = 10;
+  private static final Integer POPULATION_SIZE = 100;
   private static final Double MUTATION_RATE = 0.1;
   private static final Double DEFAULT_SCORE = 0.0;
 
@@ -47,6 +46,7 @@ public class GeneticAlgorithm {
     FEATURES.add(new UnevenFeature());
     FEATURES.add(new MaxHeightFeature());
     FEATURES.add(new BlocksOnHoleFeature());
+    FEATURES.add(new WellFeature());
 
     File newFile = new File("heuristics.txt");
     GeneticAlgorithm ga = new GeneticAlgorithm();
@@ -244,12 +244,10 @@ public class GeneticAlgorithm {
    * @return
    */
   private Double[] crossover(Heuristic heuristic1, Heuristic heuristic2) {
-    Double score1 = heuristic1.getScore();
-    Double score2 = heuristic2.getScore();
     Double[] weight1 = heuristic1.getWeights();
     Double[] weight2 = heuristic2.getWeights();
-    Double crossoverRate = score1.doubleValue() /(score1.doubleValue() + score2.doubleValue());
-//    Double crossoverRate = 0.5;
+//    Double crossoverRate = score1.doubleValue() /(score1.doubleValue() + score2.doubleValue());
+    Double crossoverRate = 0.5;
     Double[] resultHeuristics = new Double[FEATURES.size()];
 
     for (int i = 0; i < FEATURES.size(); i++) {

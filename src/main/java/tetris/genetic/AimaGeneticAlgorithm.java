@@ -37,6 +37,7 @@ public class AimaGeneticAlgorithm {
         FEATURES.add(new UnevenFeature());
         FEATURES.add(new MaxHeightFeature());
         FEATURES.add(new BlocksOnHoleFeature());
+        FEATURES.add(new WellFeature());
 
         this.population = newRandomPopulation();
 
