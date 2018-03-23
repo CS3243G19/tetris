@@ -98,6 +98,7 @@ public class AimaGeneticAlgorithm {
             for (int k = 0; k < futureScores.size(); k++) {
                 try {
                     Double score = futureScores.get(k).get();
+                    System.out.println("Score:" + score);
                     scores[k] = score;
                 } catch(Exception e) {
                     e.printStackTrace();
