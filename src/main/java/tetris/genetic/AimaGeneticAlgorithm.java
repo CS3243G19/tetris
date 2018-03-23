@@ -1,6 +1,7 @@
 package tetris.genetic;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -102,7 +103,7 @@ public class AimaGeneticAlgorithm {
         for (int k = 0; k < futureScores.size(); k++) {
             try {
                 Double score = futureScores.get(k).get();
-                System.out.println("k: " + k + " Score:" + score);
+                System.out.printf("Individual %i: %f\n", k, score);
                 this.scores.set(k, score);
             } catch(Exception e) {
                 e.printStackTrace();
@@ -175,7 +176,7 @@ public class AimaGeneticAlgorithm {
     private void logIteration() {
         int best = bestIndividual();
         System.out.println("Iteration: " + currIteration);
-        System.out.println("Best Individual: " + population.get(best).getWeights().toString());
+        System.out.println("Best Individual: " + Arrays.toString(population.get(best).getWeights()));
         System.out.println("Score: " + scores.get(best));
     }
 
