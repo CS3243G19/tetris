@@ -23,7 +23,7 @@ public class AimaGeneticAlgorithm {
     private final ArrayList<Feature> FEATURES = new ArrayList<>();
     private ArrayList<Heuristic> population;
     private int currIteration;
-    private double[] scores;
+    private ArrayList<Double> scores = new ArrayList<>();
     private final Random random = new Random();
 
     public AimaGeneticAlgorithm() {
@@ -99,7 +99,7 @@ public class AimaGeneticAlgorithm {
                 try {
                     Double score = futureScores.get(k).get();
                     System.out.println("Score:" + score);
-                    scores[k] = score;
+                    this.scores.set(k, score);
                 } catch(Exception e) {
                     e.printStackTrace();
                 }
