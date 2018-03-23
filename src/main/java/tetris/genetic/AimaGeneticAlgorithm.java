@@ -28,11 +28,13 @@ public class AimaGeneticAlgorithm {
     private final Random random = new Random();
 
     public AimaGeneticAlgorithm() {
-        this.population = newRandomPopulation();
         FEATURES.add(new HoleFeature());
         FEATURES.add(new RowsClearedFeature());
         FEATURES.add(new TotalHeightFeature());
         FEATURES.add(new UnevenFeature());
+
+        this.population = newRandomPopulation();
+
         scores = new ArrayList<>(Collections.nCopies(POPULATION_SIZE, 0.0));
         currIteration = 0;
     }
@@ -116,7 +118,7 @@ public class AimaGeneticAlgorithm {
         Double[] weight1 = x.getWeights();
         Double[] weight2 = y.getWeights();
 //        Double crossoverRate = score1.doubleValue() /(score1.doubleValue() + score2.doubleValue());
-    Double crossoverRate = 0.5;
+        Double crossoverRate = 0.5;
         Double[] resultHeuristics = new Double[FEATURES.size()];
 
         for (int i = 0; i < FEATURES.size(); i++) {
@@ -173,7 +175,7 @@ public class AimaGeneticAlgorithm {
     private void logIteration() {
         int best = bestIndividual();
         System.out.println("Iteration: " + currIteration);
-        System.out.println("Best Individual: " + population.get(best).getWeights());
+        System.out.println("Best Individual: " + population.get(best).getWeights().toString());
         System.out.println("Score: " + scores.get(best));
     }
 
