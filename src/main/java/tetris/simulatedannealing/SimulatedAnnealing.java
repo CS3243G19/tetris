@@ -15,29 +15,28 @@ import tetris.scorer.Scorer;
 
 public class SimulatedAnnealing {
     private static final int NUM_GAMES = 5;
-    private final int NUM_ITERATIONS = 100;
+    private static final int NUM_ITERATIONS = 100;
     private Scheduler scheduler;
     private double currentScore;
     private Heuristic heuristic;
-    private ArrayList<Feature> features;
+    private static final ArrayList<Feature> FEATURES = new ArrayList<>();
     private int iteration;
     private Random random;
 
     public SimulatedAnnealing() {
         this.currentScore = 0;
-        this.features = new ArrayList<>();
-        this.features.add(new HoleFeature());
-        this.features.add(new HoleSquaredFeature());
-        this.features.add(new MaxHoleHeightFeature());
-        this.features.add(new RowsClearedFeature());
-        this.features.add(new TotalHeightFeature());
-        this.features.add(new UnevenFeature());
+        FEATURES.add(new HoleFeature());
+        FEATURES.add(new HoleSquaredFeature());
+        FEATURES.add(new MaxHoleHeightFeature());
+        FEATURES.add(new RowsClearedFeature());
+        FEATURES.add(new TotalHeightFeature());
+        FEATURES.add(new UnevenFeature());
 
         this.random = new Random();
 
         this.iteration = 0;
         this.scheduler = new Scheduler();
-        this.heuristic = new Heuristic(this.features);
+        this.heuristic = new Heuristic(FEATURES);
     }
 
     public static void main(String[] args) {
@@ -82,7 +81,7 @@ public class SimulatedAnnealing {
 
     private Heuristic getNextHeuristic(Heuristic heuristic) {
         Double[] weights = heuristic.getWeights();
-        int c = random.nextInt(this.features.size());
+        int c = random.nextInt(FEATURES.size());
         Double[] newWeights = new Double[weights.length];
         for (int i = 0; i < weights.length; i++) {
             newWeights[i] = weights[i];
@@ -90,7 +89,7 @@ public class SimulatedAnnealing {
 
         newWeights[c] = newWeights[c] + random.nextDouble() - 0.5;
 
-        return new Heuristic(this.features, newWeights, 0.0);
+        return new Heuristic(FEATURES, newWeights, 0.0);
     }
 
     public class Scheduler {
@@ -108,7 +107,7 @@ public class SimulatedAnnealing {
         public Scheduler() {
             this.k = 20;
             this.lam = 0.045;
-            this.limit = 100;
+            this.limit = NUM_ITERATIONS;
         }
 
         public double getTemp(int t) {
