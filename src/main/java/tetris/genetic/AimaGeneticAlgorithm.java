@@ -1,6 +1,7 @@
 package tetris.genetic;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Callable;
@@ -18,12 +19,12 @@ import tetris.scorer.Scorer;
 
 public class AimaGeneticAlgorithm {
     private static final double MUTATION_PROBABILITY = 0.1;
-    private final int POPULATION_SIZE = 1000;
+    private final int POPULATION_SIZE = 100;
     private final int NUM_ITERATIONS = 100;
     private final ArrayList<Feature> FEATURES = new ArrayList<>();
     private ArrayList<Heuristic> population;
     private int currIteration;
-    private ArrayList<Double> scores = new ArrayList<>();
+    private ArrayList<Double> scores;
     private final Random random = new Random();
 
     public AimaGeneticAlgorithm() {
@@ -32,6 +33,7 @@ public class AimaGeneticAlgorithm {
         FEATURES.add(new RowsClearedFeature());
         FEATURES.add(new TotalHeightFeature());
         FEATURES.add(new UnevenFeature());
+        scores = new ArrayList<>(Collections.nCopies(POPULATION_SIZE, 0.0));
         currIteration = 0;
     }
 
@@ -98,7 +100,7 @@ public class AimaGeneticAlgorithm {
             for (int k = 0; k < futureScores.size(); k++) {
                 try {
                     Double score = futureScores.get(k).get();
-                    System.out.println("Score:" + score);
+                    System.out.println("k: " + k + " Score:" + score);
                     this.scores.set(k, score);
                 } catch(Exception e) {
                     e.printStackTrace();
@@ -195,7 +197,7 @@ public class AimaGeneticAlgorithm {
     }
 
     private class HeuristicRunner implements Callable<Double> {
-        private static final int NUM_GAMES = 100;
+        private static final int NUM_GAMES = 3;
         private Scorer scorer;
 
         public HeuristicRunner (Heuristic heuristic) {
