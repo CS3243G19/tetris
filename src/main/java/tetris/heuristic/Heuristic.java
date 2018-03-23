@@ -74,7 +74,7 @@ public class Heuristic implements Comparable<Heuristic>{
     Random r = new Random();
     this.weights = new Double[this.size];
     for (int i = 0; i < this.size; i++) {
-      this.weights[i] = r.nextDouble();
+      this.weights[i] = r.nextDouble() - 0.5;
     }
   }
 
