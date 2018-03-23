@@ -1,5 +1,9 @@
 package tetris.genetic;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,7 +23,8 @@ import tetris.heuristic.Heuristic;
 import tetris.scorer.Scorer;
 
 public class AimaGeneticAlgorithm {
-    private static final double MUTATION_PROBABILITY = 0.1;
+    private static final double MUTATION_PROBABILITY = 0.25;
+    private static final String HEURISTICS_FILE = "heuristics.txt";
     private final int POPULATION_SIZE = 100;
     private final int NUM_ITERATIONS = 100;
     private final ArrayList<Feature> FEATURES = new ArrayList<>();
@@ -50,11 +55,32 @@ public class AimaGeneticAlgorithm {
     }
 
     private void run() {
+        File file = new File(HEURISTICS_FILE);
         do {
             population = nextGeneration(population);
             logIteration();
+            writeToFile(file);
             currIteration++;
         } while (currIteration < NUM_ITERATIONS);
+    }
+
+    private void writeToFile(File file) {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+            for (int i = 0; i < population.size(); i++) {
+                Heuristic curr = population.get(i);
+                for (int j = 0; j < FEATURES.size(); j++) {
+                    Double[] weight = curr.getWeights();
+                    writer.write(weight[j].toString() + ",");
+                }
+                writer.write(scores.get(i).toString());
+                writer.newLine();
+            }
+            writer.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private ArrayList<Heuristic> nextGeneration(ArrayList<Heuristic> population) {
@@ -214,7 +240,12 @@ public class AimaGeneticAlgorithm {
 
             Double averageScore = scorer.getAverageScore();
 
+            if (scorer.scores.size() > NUM_GAMES) {
+                System.out.println("Overplayed by " + scorer.scores.size());
+            }
+
             return averageScore;
+
         }
     }
 
