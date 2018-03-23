@@ -3,7 +3,6 @@ package tetris.genetic;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,6 +15,8 @@ import java.util.concurrent.Future;
 
 import tetris.feature.Feature;
 import tetris.feature.HoleFeature;
+import tetris.feature.HoleSquaredFeature;
+import tetris.feature.MaxHoleHeightFeature;
 import tetris.feature.RowsClearedFeature;
 import tetris.feature.TotalHeightFeature;
 import tetris.feature.UnevenFeature;
@@ -35,6 +36,8 @@ public class AimaGeneticAlgorithm {
 
     public AimaGeneticAlgorithm() {
         FEATURES.add(new HoleFeature());
+        FEATURES.add(new HoleSquaredFeature());
+        FEATURES.add(new MaxHoleHeightFeature());
         FEATURES.add(new RowsClearedFeature());
         FEATURES.add(new TotalHeightFeature());
         FEATURES.add(new UnevenFeature());
