@@ -20,3 +20,9 @@ task ga(type: JavaExec, dependsOn: classes) {
      
 }
 
+
+task aimaga(type: JavaExec, dependsOn: classes) {
+    main = "tetris.genetic.AimaGeneticAlgorithm"
+    classpath = sourceSets.main.runtimeClasspath
+
+}

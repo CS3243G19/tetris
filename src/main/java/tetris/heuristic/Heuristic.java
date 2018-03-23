@@ -13,6 +13,8 @@ import tetris.NextState;
 import tetris.State;
 import tetris.feature.Feature;
 import tetris.feature.HoleFeature;
+import tetris.feature.HoleSquaredFeature;
+import tetris.feature.MaxHoleHeightFeature;
 import tetris.feature.RowsClearedFeature;
 import tetris.feature.TotalHeightFeature;
 import tetris.feature.UnevenFeature;
@@ -31,6 +33,8 @@ public class Heuristic implements Comparable<Heuristic>{
     map.put(2, RowsClearedFeature.class);
     map.put(3, TotalHeightFeature.class);
     map.put(4, UnevenFeature.class);
+    map.put(5, HoleSquaredFeature.class);
+    map.put(6, MaxHoleHeightFeature.class);
     return map;
   }
 
@@ -74,7 +78,7 @@ public class Heuristic implements Comparable<Heuristic>{
     Random r = new Random();
     this.weights = new Double[this.size];
     for (int i = 0; i < this.size; i++) {
-      this.weights[i] = r.nextDouble();
+      this.weights[i] = r.nextDouble() * 10 - 5;
     }
   }
 
