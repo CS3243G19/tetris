@@ -17,15 +17,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-<<<<<<< HEAD
-import tetris.feature.Feature;
-import tetris.feature.HoleFeature;
-import tetris.feature.RowsClearedFeature;
-import tetris.feature.TotalHeightFeature;
-import tetris.feature.UnevenFeature;
-=======
 import tetris.feature.*;
->>>>>>> e437644524928528297558372d460f957c56cf56
 import tetris.heuristic.Heuristic;
 import tetris.scorer.Scorer;
 

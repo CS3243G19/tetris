@@ -9,10 +9,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Random;
 
-<<<<<<< HEAD
-=======
 import tetris.NextState;
->>>>>>> e437644524928528297558372d460f957c56cf56
 import tetris.State;
 import tetris.feature.Feature;
 import tetris.feature.HoleFeature;
