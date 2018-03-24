@@ -41,12 +41,15 @@ public class GeneticAlgorithm {
 
   public static void main(String[] args) {
     FEATURES.add(new HoleFeature());
+    FEATURES.add(new HoleSquaredFeature());
     FEATURES.add(new RowsClearedFeature());
     FEATURES.add(new TotalHeightFeature());
     FEATURES.add(new UnevenFeature());
     FEATURES.add(new MaxHeightFeature());
     FEATURES.add(new BlocksOnHoleFeature());
     FEATURES.add(new WellFeature());
+    FEATURES.add(new RowTransitionsFeature());
+    FEATURES.add(new ColTransitionsFeature());
 
     File newFile = new File("heuristics.txt");
     GeneticAlgorithm ga = new GeneticAlgorithm();
