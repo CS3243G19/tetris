@@ -38,6 +38,8 @@ public class AimaGeneticAlgorithm {
         FEATURES.add(new MaxHeightFeature());
         FEATURES.add(new BlocksOnHoleFeature());
         FEATURES.add(new WellFeature());
+        FEATURES.add(new RowTransitionsFeature());
+        FEATURES.add(new ColTransitionsFeature());
 
         this.population = newRandomPopulation();
 
