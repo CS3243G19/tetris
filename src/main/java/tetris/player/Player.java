@@ -50,7 +50,7 @@ public class Player {
   public double spamPly(NextState s, int depth) {
     double totalValue = 0;
     // give it all 7 possible pieces
-    for (int i=0; i<7; i++) {
+    for (int i=0; i<State.N_PIECES; i++) {
       NextState nextPiece = new NextState(s);
       nextPiece.setNextPiece(i);
       int[][] legalMoves = new State().getLegalMoves(i);
@@ -68,7 +68,7 @@ public class Player {
         }
       }
       //pd("maxValue:   " + maxValue);
-      totalValue += maxValue/7.0;
+      //totalValue += maxValue/7.0;
       totalValue = totalValue + maxValue/7.0;
       //pd("totalValue: " + totalValue);
     }
