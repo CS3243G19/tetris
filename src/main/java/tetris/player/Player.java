@@ -29,8 +29,8 @@ public class Player {
       }
 
       double heuristicValue = heuristic.getValue(nextState);
-      pd("avg Cloud value: " + averageCloud);
-      pd("heuristic value: " + heuristicValue);
+      //pd("avg Cloud value: " + averageCloud);
+      //pd("heuristic value: " + heuristicValue);
 
       double val = heuristicValue + averageCloud;
       if (val > maxValue) {
@@ -67,9 +67,11 @@ public class Player {
           maxValue = val;
         }
       }
-      totalValue += maxValue;
+      //pd("maxValue:   " + maxValue);
+      totalValue += maxValue/7.0;
+      //pd("totalValue: " + totalValue);
     }
-    return totalValue/7.0;
+    return totalValue;
   }
 
   public void pd(Object a) {
