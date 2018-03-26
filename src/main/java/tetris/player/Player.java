@@ -32,7 +32,7 @@ public class Player {
       //pd("avg Cloud value: " + averageCloud);
       //pd("heuristic value: " + heuristicValue);
 
-      double val = heuristicValue + averageCloud;
+      double val = averageCloud;
       if (val > maxValue) {
         maxValue = val;
         index = i;
@@ -69,6 +69,7 @@ public class Player {
       }
       //pd("maxValue:   " + maxValue);
       totalValue += maxValue/7.0;
+      totalValue = totalValue + maxValue/7.0;
       //pd("totalValue: " + totalValue);
     }
     return totalValue;

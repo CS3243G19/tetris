@@ -21,7 +21,7 @@ public class AimaGeneticAlgorithm {
     private static final double MUTATION_PROBABILITY = 0.25;
     private static final String HEURISTICS_FILE = "heuristics.txt";
     private static final int POPULATION_SIZE = 10;
-    private static final int NUM_ITERATIONS = 10;
+    private static final int NUM_ITERATIONS = 2;
     private static final ArrayList<Feature> FEATURES = new ArrayList<>();
     private ArrayList<Heuristic> population;
     private int currIteration;
