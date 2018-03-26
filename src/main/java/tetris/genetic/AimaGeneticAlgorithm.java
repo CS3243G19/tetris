@@ -242,10 +242,6 @@ public class AimaGeneticAlgorithm {
 
             Double averageScore = scorer.getAverageScore();
 
-            if (scorer.scores.size() > NUM_GAMES) {
-                System.out.println("Overplayed by " + scorer.scores.size());
-            }
-
             return averageScore;
 
         }

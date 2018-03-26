@@ -4,8 +4,14 @@ import tetris.NextState;
 import tetris.State;
 import tetris.heuristic.Heuristic;
 
+import java.util.ArrayList;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
 public class Player {
-  boolean DEBUG = true;
+  private static final int DEPTH = 1;
   public Heuristic heuristic;
 
   public Player(Heuristic heuristic) {
@@ -18,27 +24,29 @@ public class Player {
 
     int index = -1;
 
+    ExecutorService executor = Executors.newFixedThreadPool(legalMoves.length);
+    ArrayList<Future<Double>> avgValues = new ArrayList<>();
+
     for (int i = 0; i < legalMoves.length; i++) {
       NextState nextState = new NextState(s);
-
       nextState.makeMove(i, legalMoves);
-      double averageCloud = spamPly(nextState, 1);
+      PlyRunner runner = new PlyRunner(nextState);
+      Future<Double> value =  executor.submit(runner);
+      avgValues.add(value);
+    }
+    executor.shutdown();
 
-      if (nextState.hasLost()) {
-        continue;
-      }
-
-      double heuristicValue = heuristic.getValue(nextState);
-      //pd("avg Cloud value: " + averageCloud);
-      //pd("heuristic value: " + heuristicValue);
-
-      double val = averageCloud;
-      if (val > maxValue) {
-        maxValue = val;
-        index = i;
+    for (int i = 0;i < avgValues.size(); i++) {
+      try{
+        Double val = avgValues.get(i).get();
+        if (val > maxValue) {
+          maxValue = val;
+          index = i;
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
       }
     }
-
     // Every move leads to a loss.
     if (index == -1) {
       index = 0; // make a random move
@@ -67,17 +75,22 @@ public class Player {
           maxValue = val;
         }
       }
-      //pd("maxValue:   " + maxValue);
-      //totalValue += maxValue/7.0;
-      totalValue = totalValue + maxValue/7.0;
-      //pd("totalValue: " + totalValue);
+      totalValue = totalValue + maxValue/State.N_PIECES;
     }
     return totalValue;
   }
 
-  public void pd(Object a) {
-    if(DEBUG) {
-      System.out.println(a);
+  private class PlyRunner implements Callable<Double> {
+    private NextState nextState;
+
+    public PlyRunner(NextState nextState) {
+      this.nextState = nextState;
+    }
+
+    @Override
+    public Double call() {
+      Double averageValue = spamPly(nextState, DEPTH);
+      return averageValue;
     }
   }
 }
