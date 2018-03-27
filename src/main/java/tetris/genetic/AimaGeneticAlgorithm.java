@@ -20,8 +20,8 @@ import tetris.scorer.Scorer;
 public class AimaGeneticAlgorithm {
     private static final double MUTATION_PROBABILITY = 0.25;
     private static final String HEURISTICS_FILE = "heuristics.txt";
-    private static final int POPULATION_SIZE = 100;
-    private static final int NUM_ITERATIONS = 100;
+    private static final int POPULATION_SIZE = 10;
+    private static final int NUM_ITERATIONS = 1;
     private static final ArrayList<Feature> FEATURES = new ArrayList<>();
     private ArrayList<Heuristic> population;
     private int currIteration;
@@ -241,10 +241,6 @@ public class AimaGeneticAlgorithm {
             }
 
             Double averageScore = scorer.getAverageScore();
-
-            if (scorer.scores.size() > NUM_GAMES) {
-                System.out.println("Overplayed by " + scorer.scores.size());
-            }
 
             return averageScore;
 

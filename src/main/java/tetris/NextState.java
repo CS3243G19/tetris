@@ -32,8 +32,35 @@ public class NextState {
         return lost;
     }
 
+    public void setNextPiece(int nextPiece) {
+      this.nextPiece = nextPiece;
+    }
+
+    public int getNextPiece() {
+      return nextPiece;
+    }
+
+    public int getTurnNumber() {
+      return turn;
+    }
+
     //constructor
     public NextState(State s) {
+        for (int i = 0; i < State.ROWS; i++) {
+            for (int j = 0; j < State.COLS; j++) {
+                field[i][j] = s.getField()[i][j];
+            }
+        }
+
+        for (int i = 0; i < State.COLS; i++) {
+            top[i] = s.getTop()[i];
+        }
+        nextPiece = s.getNextPiece();
+        turn = s.getTurnNumber();
+        cleared = s.getRowsCleared();
+    }
+
+    public NextState(NextState s) {
         for (int i = 0; i < State.ROWS; i++) {
             for (int j = 0; j < State.COLS; j++) {
                 field[i][j] = s.getField()[i][j];

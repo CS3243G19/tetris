@@ -101,6 +101,9 @@ public class State {
 
   }
 
+  public int[][] getLegalMoves(int nextPiece) {
+    return legalMoves[nextPiece];
+  }
 
   public int[][] getField() {
     return field;
