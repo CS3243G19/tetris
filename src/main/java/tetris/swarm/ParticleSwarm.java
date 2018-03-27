@@ -1,6 +1,6 @@
 package tetris.swarm;
 
-import javafx.util.Pair;
+import tetris.Pair;
 import tetris.feature.*;
 import tetris.heuristic.Heuristic;
 

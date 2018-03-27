@@ -1,6 +1,6 @@
 package tetris.swarm;
 
-import javafx.util.Pair;
+import tetris.Pair;
 import tetris.feature.*;
 import tetris.heuristic.Heuristic;
 import tetris.scorer.Scorer;
@@ -14,7 +14,7 @@ public class Particle {
     public static final Double INERTIA = 0.7d; //Weight decay
     public static final Double C1 = 2d; //Weight of individual best position
     public static final Double C2 = 2d; //Weight of global best position
-    public static int NUM_GAMES = 3; //Number of games to play
+    public static final int NUM_GAMES = 3; //Number of games to play
 
 
     private Double[] velocity;
@@ -43,19 +43,8 @@ public class Particle {
      * @return Pair<Double, Heuristic> pair of score and position
      */
     public Callable<Pair<Double, Heuristic>> play(Heuristic globalBest) {
-        return () -> {
-            update(globalBest);
-            Scorer scorer = new Scorer(position);
-            for(int i = 0; i < NUM_GAMES; i++) {
-                scorer.play();
-            }
-            Double score = scorer.getAverageScore();
-            if(score > bestScore) {
-                best = position;
-                bestScore = score;
-            }
-            return new Pair<Double, Heuristic>(score, position);
-        };
+        update(globalBest);
+        return new HeuristicRunner();
     }
 
     /**
@@ -83,4 +72,19 @@ public class Particle {
         position = new Heuristic(position.getFeatures(), resultant, 0d);
     }
 
+    private class HeuristicRunner implements Callable<Pair<Double, Heuristic>> {
+        @Override
+        public Pair<Double, Heuristic> call() {
+            Scorer scorer = new Scorer(position);
+            for(int i = 0; i < NUM_GAMES; i++) {
+                scorer.play();
+            }
+            Double score = scorer.getAverageScore();
+            if(score > bestScore) {
+                best = position;
+                bestScore = score;
+            }
+            return new Pair<>(score, position);
+        }
+    }
 }
