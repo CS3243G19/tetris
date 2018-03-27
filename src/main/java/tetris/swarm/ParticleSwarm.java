@@ -15,8 +15,8 @@ import java.util.concurrent.Future;
 
 public class ParticleSwarm {
     //Hyper parameters
-    public final int NUM_ITERATIONS = 1000;
-    public final int NUM_PARTICLES = 1000;
+    public static final int NUM_ITERATIONS = 1000;
+    public static final int NUM_PARTICLES = 1000;
 
     private Heuristic globalBest;
     private Double globalBestScore = 0d;
