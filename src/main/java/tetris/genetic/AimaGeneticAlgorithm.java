@@ -166,7 +166,6 @@ public class AimaGeneticAlgorithm {
         for (int k = 0; k < futureScores.size(); k++) {
             try {
                 Double score = futureScores.get(k).get();
-                System.out.printf("Individual %d: %f\n", k, score);
                 this.scores.set(k, score);
             } catch(Exception e) {
                 e.printStackTrace();
@@ -273,10 +272,6 @@ public class AimaGeneticAlgorithm {
             }
 
             Double averageScore = scorer.getAverageScore();
-
-            if (scorer.scores.size() > NUM_GAMES) {
-                System.out.println("Overplayed by " + scorer.scores.size());
-            }
 
             return averageScore;
 
