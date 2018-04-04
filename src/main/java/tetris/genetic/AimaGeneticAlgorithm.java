@@ -80,9 +80,9 @@ public class AimaGeneticAlgorithm {
     }
 
     private void run() {
-        File heuristicsFile = new File(String.format(HEURISTICS_FILE, currIteration));
-        File bestHeuristicsFile = new File(BEST_HEURISTICS_FILE);
         do {
+            File heuristicsFile = new File(String.format(HEURISTICS_FILE, currIteration));
+            File bestHeuristicsFile = new File(BEST_HEURISTICS_FILE);
             population = nextGeneration(population);
             logIteration();
             writeToFile(heuristicsFile);
