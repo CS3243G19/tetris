@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Callable;
@@ -13,6 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import tetris.Pair;
 import tetris.feature.BlocksOnHoleFeature;
 import tetris.feature.ColTransitionsFeature;
 import tetris.feature.Feature;
@@ -33,14 +35,14 @@ public class AimaGeneticAlgorithm {
     private static final String EXPERIMENTS_DIR = "experiments/";
     private static final String HEURISTICS_FILE = EXPERIMENTS_DIR + "heuristics_%s.txt";
     private static final String BEST_HEURISTICS_FILE = EXPERIMENTS_DIR + "/best_heuristic.txt";
-    private static final int POPULATION_SIZE = 1000;
+    private static final int POPULATION_SIZE = 200;
+    private static final int ELITES_TO_KEEP = 5;
     private static final int NUM_ITERATIONS = 1000;
     private static final ArrayList<Feature> FEATURES = new ArrayList<>();
-    private ArrayList<Heuristic> population;
+    public static final int NUM_THREADS = 1000;
+    private ArrayList<Pair<Heuristic, Double>> population;
     private int currIteration;
-    private ArrayList<Double> scores;
-    private Heuristic currentBestHeuristic;
-    private Double currentBestScore;
+    private Pair<Heuristic, Double> currentBestIndividual;
     private final Random random = new Random();
 
     public AimaGeneticAlgorithm() {
@@ -61,29 +63,37 @@ public class AimaGeneticAlgorithm {
         FEATURES.add(new ColTransitionsFeature());
         FEATURES.add(new MaxWellFeature());
 
-        this.currentBestHeuristic = new Heuristic(FEATURES);
-        this.currentBestScore = 0.;
+        this.currentBestIndividual = new Pair(new Heuristic(FEATURES), 0.);
 
         this.population = newRandomPopulation();
 
-        scores = new ArrayList<>(Collections.nCopies(POPULATION_SIZE, 0.0));
         currIteration = 0;
     }
 
-    private ArrayList<Heuristic> newRandomPopulation() {
-        ArrayList<Heuristic> newPopulation = new ArrayList<>();
+    private ArrayList<Pair<Heuristic, Double>> newRandomPopulation() {
+        ArrayList<Pair<Heuristic, Double>> newPopulation = new ArrayList<>();
         for (int i = 0; i < POPULATION_SIZE; i++) {
-            newPopulation.add(new Heuristic(FEATURES));
+            newPopulation.add(new Pair(new Heuristic(FEATURES), 0.));
         }
 
         return newPopulation;
+    }
+
+    private void sortPopulation() {
+        population.sort(new Comparator<Pair<Heuristic, Double>>() {
+            @Override
+            public int compare(Pair<Heuristic, Double> t1, Pair<Heuristic, Double> t2) {
+                return t2.getValue().compareTo(t1.getValue());
+            }
+        });
     }
 
     private void run() {
         do {
             File heuristicsFile = new File(String.format(HEURISTICS_FILE, currIteration));
             File bestHeuristicsFile = new File(BEST_HEURISTICS_FILE);
-            population = nextGeneration(population);
+            nextGeneration(population);
+            sortPopulation(); // for easier processing
             logIteration();
             writeToFile(heuristicsFile);
             updateBest(bestHeuristicsFile);
@@ -92,11 +102,10 @@ public class AimaGeneticAlgorithm {
     }
 
     private void updateBest(File file) {
-        int best = bestIndividual();
-        double score = scores.get(best);
-        if (score > currentBestScore) {
-            currentBestHeuristic = population.get(best);
-            currentBestScore = score;
+        Pair<Heuristic, Double> pair = population.get(0);
+        Double score = pair.getValue();
+        if (score > currentBestIndividual.getValue()) {
+            currentBestIndividual = population.get(0);
             writeBestHeuristic(file);
         }
     }
@@ -104,11 +113,11 @@ public class AimaGeneticAlgorithm {
     private void writeBestHeuristic(File file) {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-            Double[] weights = currentBestHeuristic.getWeights();
+            Double[] weights = currentBestIndividual.getKey().getWeights();
             for (int i = 0; i < FEATURES.size(); i++) {
                 writer.write(weights[i].toString() + ",");
             }
-            writer.write(currentBestScore.toString());
+            writer.write(currentBestIndividual.getValue().toString());
             writer.newLine();
             writer.close();
         } catch (Exception e) {
@@ -120,12 +129,13 @@ public class AimaGeneticAlgorithm {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             for (int i = 0; i < population.size(); i++) {
-                Heuristic curr = population.get(i);
+                Heuristic curr = population.get(i).getKey();
+                Double score = population.get(i).getValue();
                 for (int j = 0; j < FEATURES.size(); j++) {
                     Double[] weight = curr.getWeights();
                     writer.write(weight[j].toString() + ",");
                 }
-                writer.write(scores.get(i).toString());
+                writer.write(score.toString());
                 writer.newLine();
             }
             writer.close();
@@ -135,10 +145,9 @@ public class AimaGeneticAlgorithm {
         }
     }
 
-    private ArrayList<Heuristic> nextGeneration(ArrayList<Heuristic> population) {
+    private void nextGeneration(ArrayList<Pair<Heuristic, Double>> population) {
         playGames();
-        ArrayList<Heuristic> newPopulation = new ArrayList<>();
-        for (int i = 0; i < POPULATION_SIZE; i++) {
+        for (int i = ELITES_TO_KEEP; i < POPULATION_SIZE; i++) {
             Heuristic x = randomSelection(population);
             Heuristic y = randomSelection(population);
 
@@ -148,9 +157,8 @@ public class AimaGeneticAlgorithm {
                 child = mutate(child);
             }
 
-            newPopulation.add(child);
+            population.get(i).setKey(child);
         }
-        return newPopulation;
     }
 
     private Heuristic mutate(Heuristic child) {
@@ -169,10 +177,10 @@ public class AimaGeneticAlgorithm {
     private void playGames() {
         List<Future<Double>> futureScores = new ArrayList<>();
 
-        ExecutorService executor = Executors.newFixedThreadPool(100);
+        ExecutorService executor = Executors.newFixedThreadPool(NUM_THREADS);
 
         for (int j = 0; j < POPULATION_SIZE; j++) {
-            Heuristic individual = population.get(j);
+            Heuristic individual = population.get(j).getKey();
             HeuristicRunner runner = new HeuristicRunner(individual);
             Future<Double> score = executor.submit(runner);
             futureScores.add(score);
@@ -181,7 +189,7 @@ public class AimaGeneticAlgorithm {
         for (int k = 0; k < futureScores.size(); k++) {
             try {
                 Double score = futureScores.get(k).get();
-                this.scores.set(k, score);
+                this.population.get(k).setValue(score);
             } catch(Exception e) {
                 e.printStackTrace();
             }
@@ -207,12 +215,12 @@ public class AimaGeneticAlgorithm {
         return new Heuristic(FEATURES, resultHeuristics, 0.0);
     }
 
-    private Heuristic randomSelection(ArrayList<Heuristic> population) {
-        Heuristic selected = population.get(population.size() - 1);
+    private Heuristic randomSelection(ArrayList<Pair<Heuristic, Double>> population) {
+        Heuristic selected = population.get(population.size() - 1).getKey();
 
         double[] fValues  = new double[population.size()];
         for (int i = 0; i < population.size(); i++) {
-            fValues[i] = scores.get(i);
+            fValues[i] = population.get(i).getValue();
         }
 
         fValues = normalize(fValues);
@@ -222,7 +230,7 @@ public class AimaGeneticAlgorithm {
         for (int i = 0; i < fValues.length; i++) {
             totalSoFar += fValues[i];
             if (prob <= totalSoFar) {
-                selected = population.get(i);
+                selected = population.get(i).getKey();
                 break;
             }
         }
@@ -248,23 +256,10 @@ public class AimaGeneticAlgorithm {
     }
 
     private void logIteration() {
-        int best = bestIndividual();
+        Pair<Heuristic, Double> bestIndividual = population.get(0);
         System.out.println("Iteration: " + currIteration);
-        System.out.println("Iteration's Best Individual: " + Arrays.toString(population.get(best).getWeights()));
-        System.out.println("Score: " + scores.get(best));
-    }
-
-    private int bestIndividual() {
-        int index = -1;
-        double max = - Double.MAX_VALUE;
-        for (int i = 0; i < scores.size(); i++) {
-            Double score = scores.get(i);
-            if (score > max) {
-                max = score;
-                index = i;
-            }
-        }
-        return index;
+        System.out.println("Iteration's Best Individual: " + Arrays.toString(bestIndividual.getKey().getWeights()));
+        System.out.println("Score: " + bestIndividual.getValue());
     }
 
     public static void main(String[] args) {
