@@ -1,6 +1,5 @@
 package tetris.genetic;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -14,17 +13,30 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import tetris.feature.*;
+import tetris.feature.BlocksOnHoleFeature;
+import tetris.feature.ColTransitionsFeature;
+import tetris.feature.Feature;
+import tetris.feature.HoleFeature;
+import tetris.feature.MaxHeightFeature;
+import tetris.feature.MaxHoleHeightFeature;
+import tetris.feature.MaxWellFeature;
+import tetris.feature.RowTransitionsFeature;
+import tetris.feature.RowsClearedFeature;
+import tetris.feature.TotalHeightFeature;
+import tetris.feature.UnevenFeature;
+import tetris.feature.WellFeature;
 import tetris.heuristic.Heuristic;
 import tetris.scorer.Scorer;
 
 public class AimaGeneticAlgorithm {
+    private static final int NUM_GAMES = 3;
     private static final double MUTATION_PROBABILITY = 0.05;
-    private static final String HEURISTICS_FILE = "heuristics.txt";
+    private static final String EXPERIMENTS_DIR = "experiments/";
+    private static final String HEURISTICS_FILE = EXPERIMENTS_DIR + "heuristics_%s.txt";
+    private static final String BEST_HEURISTICS_FILE = EXPERIMENTS_DIR + "/best_heuristic.txt";
     private static final int POPULATION_SIZE = 1000;
     private static final int NUM_ITERATIONS = 1000;
     private static final ArrayList<Feature> FEATURES = new ArrayList<>();
-    private static final String BEST_HEURISTICS_FILE = "best_heuristic.txt";
     private ArrayList<Heuristic> population;
     private int currIteration;
     private ArrayList<Double> scores;
@@ -33,10 +45,14 @@ public class AimaGeneticAlgorithm {
     private final Random random = new Random();
 
     public AimaGeneticAlgorithm() {
-        FEATURES.add(new HoleFeature());
-        FEATURES.add(new HoleSquaredFeature());
-        FEATURES.add(new MaxHoleHeightFeature());
+        // Make experiments directory
+        new File(EXPERIMENTS_DIR).mkdirs();
+
+        // Minimize
         FEATURES.add(new RowsClearedFeature());
+        // Maximize
+        FEATURES.add(new HoleFeature());
+        FEATURES.add(new MaxHoleHeightFeature());
         FEATURES.add(new TotalHeightFeature());
         FEATURES.add(new UnevenFeature());
         FEATURES.add(new MaxHeightFeature());
@@ -65,9 +81,9 @@ public class AimaGeneticAlgorithm {
     }
 
     private void run() {
-        File heuristicsFile = new File(HEURISTICS_FILE);
-        File bestHeuristicsFile = new File(BEST_HEURISTICS_FILE);
         do {
+            File heuristicsFile = new File(String.format(HEURISTICS_FILE, currIteration));
+            File bestHeuristicsFile = new File(BEST_HEURISTICS_FILE);
             population = nextGeneration(population);
             logIteration();
             writeToFile(heuristicsFile);
@@ -82,8 +98,8 @@ public class AimaGeneticAlgorithm {
         if (score > currentBestScore) {
             currentBestHeuristic = population.get(best);
             currentBestScore = score;
+            writeBestHeuristic(file);
         }
-        writeBestHeuristic(file);
     }
 
     private void writeBestHeuristic(File file) {
@@ -166,7 +182,6 @@ public class AimaGeneticAlgorithm {
         for (int k = 0; k < futureScores.size(); k++) {
             try {
                 Double score = futureScores.get(k).get();
-                System.out.printf("Individual %d: %f\n", k, score);
                 this.scores.set(k, score);
             } catch(Exception e) {
                 e.printStackTrace();
@@ -259,7 +274,6 @@ public class AimaGeneticAlgorithm {
     }
 
     private class HeuristicRunner implements Callable<Double> {
-        private static final int NUM_GAMES = 3;
         private Scorer scorer;
 
         public HeuristicRunner (Heuristic heuristic) {
@@ -273,10 +287,6 @@ public class AimaGeneticAlgorithm {
             }
 
             Double averageScore = scorer.getAverageScore();
-
-            if (scorer.scores.size() > NUM_GAMES) {
-                System.out.println("Overplayed by " + scorer.scores.size());
-            }
 
             return averageScore;
 

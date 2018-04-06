@@ -5,7 +5,6 @@ import java.util.Random;
 
 import tetris.feature.Feature;
 import tetris.feature.HoleFeature;
-import tetris.feature.HoleSquaredFeature;
 import tetris.feature.MaxHoleHeightFeature;
 import tetris.feature.RowsClearedFeature;
 import tetris.feature.TotalHeightFeature;
@@ -26,7 +25,6 @@ public class SimulatedAnnealing {
     public SimulatedAnnealing() {
         this.currentScore = 0;
         FEATURES.add(new HoleFeature());
-        FEATURES.add(new HoleSquaredFeature());
         FEATURES.add(new MaxHoleHeightFeature());
         FEATURES.add(new RowsClearedFeature());
         FEATURES.add(new TotalHeightFeature());

@@ -41,7 +41,6 @@ public class GeneticAlgorithm {
 
   public static void main(String[] args) {
     FEATURES.add(new HoleFeature());
-    FEATURES.add(new HoleSquaredFeature());
     FEATURES.add(new RowsClearedFeature());
     FEATURES.add(new TotalHeightFeature());
     FEATURES.add(new UnevenFeature());
