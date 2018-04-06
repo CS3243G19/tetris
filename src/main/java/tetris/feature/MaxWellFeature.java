@@ -27,6 +27,8 @@ public class MaxWellFeature extends Feature {
                     } else if (field[row][col - 1] == 1 && field[row][col + 1] == 1) {
                         curr++;
                     }
+                } else {
+                    break;
                 }
             }
             if (curr > max) {

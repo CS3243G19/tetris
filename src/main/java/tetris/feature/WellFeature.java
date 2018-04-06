@@ -26,6 +26,8 @@ public class WellFeature extends Feature {
                     } else if (field[row][col - 1] == 1 && field[row][col + 1] == 1) {
                         wells++;
                     }
+                } else {
+                    break;
                 }
             }
         }
