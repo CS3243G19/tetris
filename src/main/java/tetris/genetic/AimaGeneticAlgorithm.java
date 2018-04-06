@@ -44,6 +44,7 @@ public class AimaGeneticAlgorithm {
         FEATURES.add(new WellFeature());
         FEATURES.add(new RowTransitionsFeature());
         FEATURES.add(new ColTransitionsFeature());
+        FEATURES.add(new MaxWellFeature());
 
         this.currentBestHeuristic = new Heuristic(FEATURES);
         this.currentBestScore = 0.;

@@ -50,6 +50,7 @@ public class GeneticAlgorithm {
     FEATURES.add(new WellFeature());
     FEATURES.add(new RowTransitionsFeature());
     FEATURES.add(new ColTransitionsFeature());
+    FEATURES.add(new MaxWellFeature());
 
     File newFile = new File("heuristics.txt");
     GeneticAlgorithm ga = new GeneticAlgorithm();

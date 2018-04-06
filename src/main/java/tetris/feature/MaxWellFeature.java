@@ -3,12 +3,13 @@ package tetris.feature;
 import tetris.NextState;
 import tetris.State;
 
-public class WellFeature extends Feature {
+public class MaxWellFeature extends Feature {
     @Override
     public double getValue(NextState s) {
-        int wells = 0;
+        int max = -1;
         int[][] field = s.getField();
         int[] top = s.getTop();
+        int curr = 0;
         for (int col = 0; col < State.COLS; col++) {
             if (top[col] == 1) {
                 continue;
@@ -17,25 +18,28 @@ public class WellFeature extends Feature {
                 if (field[row][col] == 0) {
                     if (col == 0) {
                         if (field[row][col+1] == 1) {
-                            wells++;
+                            curr++;
                         }
                     } else if (col == State.COLS - 1) {
                         if (field[row][col-1] == 1) {
-                            wells++;
+                            curr++;
                         }
                     } else if (field[row][col - 1] == 1 && field[row][col + 1] == 1) {
-                        wells++;
+                        curr++;
                     }
                 } else {
                     break;
                 }
             }
+            if (curr > max) {
+                max = curr;
+            }
         }
-        return wells;
+        return max;
     }
 
   @Override
   public boolean equals(Object o) {
-    return o instanceof WellFeature;
+    return o instanceof MaxWellFeature;
   }
 }
