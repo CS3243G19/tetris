@@ -1,5 +1,6 @@
 package tetris.genetic;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -18,14 +19,17 @@ import tetris.heuristic.Heuristic;
 import tetris.scorer.Scorer;
 
 public class AimaGeneticAlgorithm {
-    private static final double MUTATION_PROBABILITY = 0.25;
+    private static final double MUTATION_PROBABILITY = 0.05;
     private static final String HEURISTICS_FILE = "heuristics.txt";
-    private static final int POPULATION_SIZE = 100;
-    private static final int NUM_ITERATIONS = 100;
+    private static final int POPULATION_SIZE = 1000;
+    private static final int NUM_ITERATIONS = 1000;
     private static final ArrayList<Feature> FEATURES = new ArrayList<>();
+    private static final String BEST_HEURISTICS_FILE = "best_heuristic.txt";
     private ArrayList<Heuristic> population;
     private int currIteration;
     private ArrayList<Double> scores;
+    private Heuristic currentBestHeuristic;
+    private Double currentBestScore;
     private final Random random = new Random();
 
     public AimaGeneticAlgorithm() {
@@ -40,6 +44,9 @@ public class AimaGeneticAlgorithm {
         FEATURES.add(new WellFeature());
         FEATURES.add(new RowTransitionsFeature());
         FEATURES.add(new ColTransitionsFeature());
+
+        this.currentBestHeuristic = new Heuristic(FEATURES);
+        this.currentBestScore = 0.;
 
         this.population = newRandomPopulation();
 
@@ -57,13 +64,40 @@ public class AimaGeneticAlgorithm {
     }
 
     private void run() {
-        File file = new File(HEURISTICS_FILE);
+        File heuristicsFile = new File(HEURISTICS_FILE);
+        File bestHeuristicsFile = new File(BEST_HEURISTICS_FILE);
         do {
             population = nextGeneration(population);
             logIteration();
-            writeToFile(file);
+            writeToFile(heuristicsFile);
+            updateBest(bestHeuristicsFile);
             currIteration++;
         } while (currIteration < NUM_ITERATIONS);
+    }
+
+    private void updateBest(File file) {
+        int best = bestIndividual();
+        double score = scores.get(best);
+        if (score > currentBestScore) {
+            currentBestHeuristic = population.get(best);
+            currentBestScore = score;
+        }
+        writeBestHeuristic(file);
+    }
+
+    private void writeBestHeuristic(File file) {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+            Double[] weights = currentBestHeuristic.getWeights();
+            for (int i = 0; i < FEATURES.size(); i++) {
+                writer.write(weights[i].toString() + ",");
+            }
+            writer.write(currentBestScore.toString());
+            writer.newLine();
+            writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void writeToFile(File file) {
@@ -127,7 +161,7 @@ public class AimaGeneticAlgorithm {
             Future<Double> score = executor.submit(runner);
             futureScores.add(score);
         }
-        
+
         for (int k = 0; k < futureScores.size(); k++) {
             try {
                 Double score = futureScores.get(k).get();
@@ -142,11 +176,8 @@ public class AimaGeneticAlgorithm {
     }
 
     private Heuristic reproduce(Heuristic x, Heuristic y) {
-//        Double score1 = x.getScore();
-//        Double score2 = y.getScore();
         Double[] weight1 = x.getWeights();
         Double[] weight2 = y.getWeights();
-//        Double crossoverRate = score1.doubleValue() /(score1.doubleValue() + score2.doubleValue());
         Double crossoverRate = 0.5;
         Double[] resultHeuristics = new Double[FEATURES.size()];
 
@@ -204,7 +235,7 @@ public class AimaGeneticAlgorithm {
     private void logIteration() {
         int best = bestIndividual();
         System.out.println("Iteration: " + currIteration);
-        System.out.println("Best Individual: " + Arrays.toString(population.get(best).getWeights()));
+        System.out.println("Iteration's Best Individual: " + Arrays.toString(population.get(best).getWeights()));
         System.out.println("Score: " + scores.get(best));
     }
 
