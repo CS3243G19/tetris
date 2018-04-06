@@ -27,6 +27,7 @@ public class ParticleSwarm {
     public ParticleSwarm() {
         //Features
         features.add(new HoleFeature());
+        features.add(new HoleSquaredFeature());
         features.add(new MaxHoleHeightFeature());
         features.add(new RowsClearedFeature());
         features.add(new TotalHeightFeature());
