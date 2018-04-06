@@ -19,6 +19,7 @@ import tetris.feature.Feature;
 import tetris.feature.HoleFeature;
 import tetris.feature.MaxHeightFeature;
 import tetris.feature.MaxHoleHeightFeature;
+import tetris.feature.MaxWellFeature;
 import tetris.feature.RowTransitionsFeature;
 import tetris.feature.RowsClearedFeature;
 import tetris.feature.TotalHeightFeature;
