@@ -51,16 +51,10 @@ public class AimaGeneticAlgorithm {
         // Minimize
         FEATURES.add(new RowsClearedFeature());
         // Maximize
-        FEATURES.add(new HoleFeature());
-        FEATURES.add(new MaxHoleHeightFeature());
-        FEATURES.add(new TotalHeightFeature());
-        FEATURES.add(new UnevenFeature());
-        FEATURES.add(new MaxHeightFeature());
-        FEATURES.add(new BlocksOnHoleFeature());
-        FEATURES.add(new WellFeature());
         FEATURES.add(new RowTransitionsFeature());
         FEATURES.add(new ColTransitionsFeature());
-        FEATURES.add(new MaxWellFeature());
+        FEATURES.add(new HoleFeature());
+        FEATURES.add(new WellFeature());
 
         this.currentBestHeuristic = new Heuristic(FEATURES);
         this.currentBestScore = 0.;
@@ -162,9 +156,13 @@ public class AimaGeneticAlgorithm {
             newWeights[i] = weights[i];
         }
 
-        newWeights[c] = newWeights[c] + random.nextDouble() - 0.5;
+        newWeights[c] = newWeights[c] + rn();
 
         return new Heuristic(FEATURES, newWeights, 0.0);
+    }
+
+    private double rn() {
+        return ( (double) random.nextInt() ) - 0.5;
     }
 
     private void playGames() {

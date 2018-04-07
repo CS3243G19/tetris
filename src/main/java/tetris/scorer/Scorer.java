@@ -8,7 +8,7 @@ import tetris.heuristic.Heuristic;
 import tetris.player.Player;
 
 public class Scorer {
-  private static final int SLEEPTIME = 300;
+  private static final int SLEEPTIME = 000;
   protected int game;
   public ArrayList<Integer> scores;
   public Player player;

@@ -9,13 +9,18 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import com.sun.rowset.internal.Row;
+
 import tetris.NextState;
+import tetris.feature.ColTransitionsFeature;
 import tetris.feature.Feature;
 import tetris.feature.HoleFeature;
 import tetris.feature.MaxHoleHeightFeature;
+import tetris.feature.RowTransitionsFeature;
 import tetris.feature.RowsClearedFeature;
 import tetris.feature.TotalHeightFeature;
 import tetris.feature.UnevenFeature;
+import tetris.feature.WellFeature;
 
 
 public class Heuristic implements Comparable<Heuristic>{
@@ -27,11 +32,11 @@ public class Heuristic implements Comparable<Heuristic>{
 
   private static HashMap<Integer, Class<?>> initializeFeatures() {
     HashMap<Integer, Class<?>> map = new HashMap<Integer, Class<?>>();
-    map.put(1, HoleFeature.class);
-    map.put(2, RowsClearedFeature.class);
-    map.put(3, TotalHeightFeature.class);
-    map.put(4, UnevenFeature.class);
-    map.put(5, MaxHoleHeightFeature.class);
+    map.put(1, RowsClearedFeature.class);
+    map.put(2, HoleFeature.class);
+    map.put(3, RowTransitionsFeature.class);
+    map.put(4, ColTransitionsFeature.class);
+    map.put(5, WellFeature.class);
     return map;
   }
 

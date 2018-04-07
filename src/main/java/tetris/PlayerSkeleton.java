@@ -5,6 +5,7 @@ import tetris.heuristic.Heuristic;
 
 import tetris.scorer.Scorer;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class PlayerSkeleton {
@@ -13,14 +14,19 @@ public class PlayerSkeleton {
     new TFrame(state);
     PlayerSkeleton p = new PlayerSkeleton();
     ArrayList<Feature> features = new ArrayList<Feature>();
+    // Minimize
     features.add(new RowsClearedFeature());
-    features.add(new TotalHeightFeature());
-    features.add(new HoleFeature());
-    features.add(new UnevenFeature());
+    // Maximize
+      features.add(new HoleFeature());
+    features.add(new RowTransitionsFeature());
+    features.add(new ColTransitionsFeature());
+    features.add(new WellFeature());
 
-    Heuristic heuristic = new Heuristic(features);
+    File file = new File("./experiments/best_heuristic.txt");
+
+    Heuristic heuristic = new Heuristic(file);
     Scorer scorer = new Scorer(heuristic);
-    scorer.play(true);
+    scorer.play(false);
     System.out.printf("Rows cleared: %d", scorer.getLatestScore());
   }
 }
