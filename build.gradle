@@ -5,9 +5,6 @@ repositories {
 apply plugin: "java"
 apply plugin: "checkstyle"
 
-dependencies {
-  testCompile 'junit:junit:4.12'
-}
 
 task run(type: JavaExec, dependsOn: classes) {
      main = 'tetris.PlayerSkeleton'
@@ -17,15 +14,14 @@ task run(type: JavaExec, dependsOn: classes) {
 task ga(type: JavaExec, dependsOn: classes) {
      main = "tetris.genetic.GeneticAlgorithm"
      classpath = sourceSets.main.runtimeClasspath
-     
-}
-
-task aimaga(type: JavaExec, dependsOn: classes) {
-    main = "tetris.genetic.AimaGeneticAlgorithm"
-    classpath = sourceSets.main.runtimeClasspath
 }
 
 task pso(type: JavaExec, dependsOn: classes) {
     main = "tetris.swarm.ParticleSwarm"
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task sa(type: JavaExec, dependsOn: classes) {
+    main = "tetris.simulatedannealing.SimulatedAnnealing"
     classpath = sourceSets.main.runtimeClasspath
 }

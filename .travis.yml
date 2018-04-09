@@ -12,4 +12,3 @@ cache:
 
 script:
   - ./gradlew check
-  - ./gradlew test

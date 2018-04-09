@@ -69,7 +69,7 @@ public class Particle {
             resultant[i] = velocity[i] + positionWeights[i];
         }
         //Sets position to be new heuristic
-        position = new Heuristic(position.getFeatures(), resultant, 0d);
+        position = new Heuristic(position.getFeatures(), resultant);
     }
 
     private class HeuristicRunner implements Callable<Pair<Double, Heuristic>> {

@@ -87,7 +87,7 @@ public class SimulatedAnnealing {
 
         newWeights[c] = newWeights[c] + random.nextDouble() - 0.5;
 
-        return new Heuristic(FEATURES, newWeights, 0.0);
+        return new Heuristic(FEATURES, newWeights);
     }
 
     public class Scheduler {

@@ -6,32 +6,24 @@ import tetris.State;
 public class WellFeature extends Feature {
     @Override
     public double getValue(NextState s) {
-        int wells = 0;
         int[][] field = s.getField();
         int[] top = s.getTop();
-        for (int col = 0; col < State.COLS; col++) {
-            if (top[col] == 1) {
-                continue;
-            }
-            for (int row = 0; row < State.ROWS; row++) {
-                if (field[row][col] == 0) {
-                    if (col == 0) {
-                        if (field[row][col+1] == 1) {
-                            wells++;
+        int wellSum = 0;
+        for (int j = 0;  j < State.COLS;  j++) {
+            for (int i = State.ROWS -1;  i >= 0;  i--) {
+                if (field[i][j] == 0) {
+                    if (j == 0 || field[i][j - 1] != 0) {
+                        if (j == State.COLS - 1 || field[i][j + 1] != 0) {
+                            int wellHeight = i - top[j] + 1;
+                            wellSum += wellHeight * (wellHeight + 1) / 2;
                         }
-                    } else if (col == State.COLS - 1) {
-                        if (field[row][col-1] == 1) {
-                            wells++;
-                        }
-                    } else if (field[row][col - 1] == 1 && field[row][col + 1] == 1) {
-                        wells++;
                     }
                 } else {
                     break;
                 }
             }
         }
-        return wells;
+        return wellSum;
     }
 
   @Override
