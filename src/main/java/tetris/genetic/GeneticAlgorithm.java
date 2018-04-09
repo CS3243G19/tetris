@@ -47,9 +47,9 @@ public class GeneticAlgorithm {
         // Make experiments directory
         new File(EXPERIMENTS_DIR).mkdirs();
 
-        // Minimize
-        FEATURES.add(new RowsClearedFeature());
         // Maximize
+        FEATURES.add(new RowsClearedFeature());
+        // Minimize
         FEATURES.add(new RowTransitionsFeature());
         FEATURES.add(new ColTransitionsFeature());
         FEATURES.add(new HoleFeature());

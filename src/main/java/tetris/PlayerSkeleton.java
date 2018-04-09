@@ -9,24 +9,32 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class PlayerSkeleton {
-  public static void main(String[] args) {
-    State state = new State();
-    new TFrame(state);
-    PlayerSkeleton p = new PlayerSkeleton();
-    ArrayList<Feature> features = new ArrayList<Feature>();
-    // Minimize
-    features.add(new RowsClearedFeature());
-    // Maximize
-      features.add(new HoleFeature());
-    features.add(new RowTransitionsFeature());
-    features.add(new ColTransitionsFeature());
-    features.add(new WellFeature());
+    public static final ArrayList<Feature> FEATURES = new ArrayList<Feature>();
+    public static void main(String[] args) {
+        State state = new State();
+        new TFrame(state);
+        PlayerSkeleton p = new PlayerSkeleton();
 
-    File file = new File("./experiments/best_heuristic.txt");
+        // Maximize
+        FEATURES.add(new RowsClearedFeature());
+        // Minimize
+        FEATURES.add(new RowTransitionsFeature());
+        FEATURES.add(new ColTransitionsFeature());
+        FEATURES.add(new HoleFeature());
+        FEATURES.add(new WellFeature());
 
-    Heuristic heuristic = new Heuristic(file);
-    Scorer scorer = new Scorer(heuristic);
-    scorer.play(false);
-    System.out.printf("Rows cleared: %d", scorer.getLatestScore());
-  }
+        Double[] weights = new Double[]{
+                0.14859893753929043,
+                -0.3988580287056608,
+                -0.05147732402369354,
+                -0.30161953479781256,
+                -0.2543786543434735
+        };
+
+        Heuristic heuristic = new Heuristic(FEATURES, weights);
+        Scorer scorer = new Scorer(heuristic);
+        scorer.play(false);
+
+        System.out.printf("Rows cleared: %d", scorer.getLatestScore());
+    }
 }
