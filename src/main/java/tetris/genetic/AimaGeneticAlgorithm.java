@@ -65,6 +65,8 @@ public class AimaGeneticAlgorithm {
         this.currentBestHeuristic = new Heuristic(FEATURES);
         this.currentBestScore = 0.;
 
+        currIteration = 0;
+
         File start = new File(START_FILE);
         if (start.exists()) {
             loadFile(start);
@@ -72,7 +74,6 @@ public class AimaGeneticAlgorithm {
         this.population = newRandomPopulation();
 
         scores = new ArrayList<>(Collections.nCopies(POPULATION_SIZE, 0.0));
-        currIteration = 0;
     }
 
     /**
