@@ -153,7 +153,7 @@ public class GeneticAlgorithm {
     private void writeToFile(File file) {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-            writer.write(currIteration);
+            writer.write("" + currIteration);
             writer.newLine();
             for (int i = 0; i < population.size(); i++) {
                 Heuristic curr = population.get(i);
