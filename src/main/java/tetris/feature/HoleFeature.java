@@ -21,7 +21,7 @@ public class HoleFeature extends Feature {
                 }
             }
         }
-        return (double) (numHoles * 10);
+        return (double) numHoles;
   }
 
   @Override

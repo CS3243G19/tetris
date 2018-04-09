@@ -6,12 +6,11 @@ import tetris.State;
 public class WellFeature extends Feature {
     @Override
     public double getValue(NextState s) {
-        int wells = 0;
         int[][] field = s.getField();
         int[] top = s.getTop();
-                int next, prev, wellSum = 0;
+        int wellSum = 0;
         for (int j = 0;  j < State.COLS;  j++) {
-            for (int i = State.ROWS - 1;  i >= 0;  i--) {
+            for (int i = 0;  i < State.ROWS;  i++) {
                 if (field[i][j] == 0) {
                     if (j == 0 || field[i][j - 1] != 0) {
                         if (j == State.COLS - 1 || field[i][j + 1] != 0) {

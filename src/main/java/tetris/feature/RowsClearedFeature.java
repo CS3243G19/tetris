@@ -7,7 +7,7 @@ import tetris.State;
 public class RowsClearedFeature extends Feature {
   @Override
   public double getValue(NextState s) {
-    return s.getRowsCleared();
+    return Math.log(s.getRowsCleared());
   }
 
   @Override

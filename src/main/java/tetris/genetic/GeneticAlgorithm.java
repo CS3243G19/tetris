@@ -203,7 +203,7 @@ public class GeneticAlgorithm {
     }
 
     private double rn() {
-        return ( (double) random.nextInt() ) - 0.5;
+        return random.nextDouble() - 0.5;
     }
 
     private void playGames() {

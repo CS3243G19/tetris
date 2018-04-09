@@ -19,6 +19,6 @@ public class MaxHoleHeightFeature extends Feature {
             maxHeight = Math.max(maxHeight, hole);
         }
 
-        return Math.pow(maxHeight, 2);
+        return maxHeight;
     }
 }
