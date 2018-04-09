@@ -1,8 +1,12 @@
 package tetris.genetic;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,6 +17,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import tetris.Pair;
 import tetris.feature.BlocksOnHoleFeature;
 import tetris.feature.ColTransitionsFeature;
 import tetris.feature.Feature;
@@ -32,6 +37,7 @@ public class AimaGeneticAlgorithm {
     private static final int NUM_GAMES = 3;
     private static final double MUTATION_PROBABILITY = 0.05;
     private static final String EXPERIMENTS_DIR = "experiments/";
+    private static final String START_FILE = "heuristics.txt";
     private static final String HEURISTICS_FILE = EXPERIMENTS_DIR + "heuristics_%s.txt";
     private static final String BEST_HEURISTICS_FILE = EXPERIMENTS_DIR + "/best_heuristic.txt";
     private static final int POPULATION_SIZE = 1000;
@@ -44,7 +50,7 @@ public class AimaGeneticAlgorithm {
     private Double currentBestScore;
     private final Random random = new Random();
 
-    public AimaGeneticAlgorithm() {
+    public AimaGeneticAlgorithm(String startFile) {
         // Make experiments directory
         new File(EXPERIMENTS_DIR).mkdirs();
 
@@ -59,10 +65,49 @@ public class AimaGeneticAlgorithm {
         this.currentBestHeuristic = new Heuristic(FEATURES);
         this.currentBestScore = 0.;
 
+        File start = new File(START_FILE);
+        if (start.exists()) {
+            loadFile(start);
+        }
         this.population = newRandomPopulation();
 
         scores = new ArrayList<>(Collections.nCopies(POPULATION_SIZE, 0.0));
         currIteration = 0;
+    }
+
+    /**
+     * Loads the startFile into the population
+     * @param startFile
+     */
+    private void loadFile(File startFile) {
+        String line;
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(startFile));
+            line = br.readLine();
+            currIteration = Integer.parseInt(line);
+            ArrayList<Heuristic> newPopulation = new ArrayList<>();
+            ArrayList<Double> newScores = new ArrayList<>();
+            System.out.println("Loading heuristics from " + START_FILE);
+            while((line = br.readLine()) != null) {
+                String[] lineArray = line.split(",");
+                Double[] featureWeights = new Double[FEATURES.size()];
+                for (int i = 0; i < lineArray.length - 1; i++) {
+                    featureWeights[i] = Double.parseDouble(lineArray[i]);
+                }
+                newScores.add(Double.parseDouble(lineArray[lineArray.length - 1]));
+                newPopulation.add(new Heuristic(FEATURES, featureWeights, 0.));
+            }
+
+            assert(newScores.size() == POPULATION_SIZE);
+            assert(newPopulation.size() == POPULATION_SIZE);
+            scores = newScores;
+            population = newPopulation;
+            System.out.println("Heuristics successfully loaded");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private ArrayList<Heuristic> newRandomPopulation() {
@@ -114,6 +159,8 @@ public class AimaGeneticAlgorithm {
     private void writeToFile(File file) {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+            writer.write(currIteration);
+            writer.newLine();
             for (int i = 0; i < population.size(); i++) {
                 Heuristic curr = population.get(i);
                 for (int j = 0; j < FEATURES.size(); j++) {
@@ -267,7 +314,7 @@ public class AimaGeneticAlgorithm {
     }
 
     public static void main(String[] args) {
-        AimaGeneticAlgorithm ga = new AimaGeneticAlgorithm();
+        AimaGeneticAlgorithm ga = new AimaGeneticAlgorithm(START_FILE);
         ga.run();
     }
 
