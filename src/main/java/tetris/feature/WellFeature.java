@@ -10,7 +10,7 @@ public class WellFeature extends Feature {
         int[] top = s.getTop();
         int wellSum = 0;
         for (int j = 0;  j < State.COLS;  j++) {
-            for (int i = 0;  i < State.ROWS;  i++) {
+            for (int i = State.ROWS -1;  i >= 0;  i--) {
                 if (field[i][j] == 0) {
                     if (j == 0 || field[i][j - 1] != 0) {
                         if (j == State.COLS - 1 || field[i][j + 1] != 0) {
