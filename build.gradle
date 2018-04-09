@@ -17,12 +17,6 @@ task run(type: JavaExec, dependsOn: classes) {
 task ga(type: JavaExec, dependsOn: classes) {
      main = "tetris.genetic.GeneticAlgorithm"
      classpath = sourceSets.main.runtimeClasspath
-     
-}
-
-task aimaga(type: JavaExec, dependsOn: classes) {
-    main = "tetris.genetic.AimaGeneticAlgorithm"
-    classpath = sourceSets.main.runtimeClasspath
 }
 
 task pso(type: JavaExec, dependsOn: classes) {
