@@ -17,11 +17,15 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import tetris.feature.BlocksOnHoleFeature;
 import tetris.feature.ColTransitionsFeature;
 import tetris.feature.Feature;
 import tetris.feature.HoleFeature;
+import tetris.feature.MaxHoleHeightFeature;
 import tetris.feature.RowTransitionsFeature;
 import tetris.feature.RowsClearedFeature;
+import tetris.feature.TotalHeightFeature;
+import tetris.feature.UnevenFeature;
 import tetris.feature.WellFeature;
 import tetris.heuristic.Heuristic;
 import tetris.scorer.Scorer;
@@ -53,7 +57,11 @@ public class GeneticAlgorithm {
         FEATURES.add(new RowTransitionsFeature());
         FEATURES.add(new ColTransitionsFeature());
         FEATURES.add(new HoleFeature());
+        FEATURES.add(new MaxHoleHeightFeature());
+        FEATURES.add(new BlocksOnHoleFeature());
         FEATURES.add(new WellFeature());
+        FEATURES.add(new UnevenFeature());
+        FEATURES.add(new TotalHeightFeature());
 
         this.currentBestHeuristic = new Heuristic(FEATURES);
         this.currentBestScore = 0.;
