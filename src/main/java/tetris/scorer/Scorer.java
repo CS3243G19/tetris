@@ -106,11 +106,9 @@ public class Scorer {
                 maxVote = currVote;
                 maxMove = currMove;
                 voteTopRank = currRank;
-            } else if (currVote == maxVote) {
-               if ( currRank < voteTopRank) {
+            } else if (currVote == maxVote && currRank < voteTopRank) {
                    voteTopRank = currRank;
                    maxMove = currMove;
-               }
             }
         }
 
