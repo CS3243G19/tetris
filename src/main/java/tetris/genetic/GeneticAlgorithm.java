@@ -52,14 +52,14 @@ public class GeneticAlgorithm {
         new File(EXPERIMENTS_DIR).mkdirs();
 
         // Maximize
-        FEATURES.add(new RowsClearedFeature());
-        // Minimize
+//        FEATURES.add(new RowsClearedFeature());
+//        // Minimize
         FEATURES.add(new RowTransitionsFeature());
         FEATURES.add(new ColTransitionsFeature());
         FEATURES.add(new HoleFeature());
         FEATURES.add(new MaxHoleHeightFeature());
         FEATURES.add(new BlocksOnHoleFeature());
-        FEATURES.add(new WellFeature());
+//        FEATURES.add(new WellFeature());
         FEATURES.add(new UnevenFeature());
         FEATURES.add(new TotalHeightFeature());
 
@@ -324,7 +324,9 @@ public class GeneticAlgorithm {
         private Scorer scorer;
 
         public HeuristicRunner (Heuristic heuristic) {
-            this.scorer = new Scorer(heuristic);
+            ArrayList<Heuristic> heuristics = new ArrayList<>();
+            heuristics.add(heuristic);
+            this.scorer = new Scorer(heuristics);
         }
 
         @Override

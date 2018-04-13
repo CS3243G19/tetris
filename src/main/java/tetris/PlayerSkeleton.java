@@ -5,11 +5,11 @@ import tetris.heuristic.Heuristic;
 
 import tetris.scorer.Scorer;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class PlayerSkeleton {
     public static final ArrayList<Feature> FEATURES = new ArrayList<Feature>();
+    public static final ArrayList<Heuristic> HEURISTICS = new ArrayList<>();
     public static void main(String[] args) {
         State state = new State();
         new TFrame(state);
@@ -23,6 +23,7 @@ public class PlayerSkeleton {
         FEATURES.add(new HoleFeature());
         FEATURES.add(new WellFeature());
 
+
         Double[] weights = new Double[]{
                 0.14859893753929043,
                 -0.3988580287056608,
@@ -32,7 +33,8 @@ public class PlayerSkeleton {
         };
 
         Heuristic heuristic = new Heuristic(FEATURES, weights);
-        Scorer scorer = new Scorer(heuristic);
+        HEURISTICS.add(heuristic);
+        Scorer scorer = new Scorer(HEURISTICS);
         scorer.play(false);
 
         System.out.printf("Rows cleared: %d", scorer.getLatestScore());
