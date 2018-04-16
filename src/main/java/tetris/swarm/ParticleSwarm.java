@@ -50,7 +50,7 @@ public class ParticleSwarm {
         String filename = "heuristics.txt";
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(filename, true));
-            bw.write("Current iteration: "+iterations);
+            bw.write("\nCurrent iteration: "+iterations);
             bw.write("Best score: "+globalBestScore);
             bw.write("Best weights: "+Arrays.toString(globalBest.getWeights()));
             bw.write("-------------------------------");
