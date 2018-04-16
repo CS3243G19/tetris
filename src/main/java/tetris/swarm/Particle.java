@@ -14,7 +14,7 @@ public class Particle {
     public static final Double INERTIA = 0.7d; //Weight decay
     public static final Double C1 = 2d; //Weight of individual best position
     public static final Double C2 = 2d; //Weight of global best position
-    public static final int NUM_GAMES = 3; //Number of games to play
+    public static final int NUM_GAMES = 2; //Number of games to play
 
 
     private Double[] velocity;
