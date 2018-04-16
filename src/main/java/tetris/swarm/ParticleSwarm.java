@@ -15,8 +15,8 @@ import java.util.concurrent.Future;
 
 public class ParticleSwarm {
     //Hyper parameters
-    public static final int NUM_ITERATIONS = 1000;
-    public static final int NUM_PARTICLES = 1000;
+    public static final int NUM_ITERATIONS = 100;
+    public static final int NUM_PARTICLES = 50;
 
     private Heuristic globalBest;
     private Double globalBestScore = 0d;
@@ -26,17 +26,15 @@ public class ParticleSwarm {
 
     public ParticleSwarm() {
         //Features
-        features.add(new HoleFeature());
-        features.add(new MaxHoleHeightFeature());
         features.add(new RowsClearedFeature());
-        features.add(new TotalHeightFeature());
-        features.add(new UnevenFeature());
-        features.add(new MaxHeightFeature());
-        features.add(new BlocksOnHoleFeature());
-        features.add(new WellFeature());
         features.add(new RowTransitionsFeature());
         features.add(new ColTransitionsFeature());
-        features.add(new MaxWellFeature());
+        features.add(new HoleFeature());
+        features.add(new MaxHoleHeightFeature());
+        features.add(new BlocksOnHoleFeature());
+        features.add(new WellFeature());
+        features.add(new UnevenFeature());
+        features.add(new TotalHeightFeature());
 
         globalBest = new Heuristic(features);
 
@@ -48,6 +46,18 @@ public class ParticleSwarm {
         System.out.println("Current iteration: "+iterations);
         System.out.println("Best score: "+globalBestScore);
         System.out.println("Best weights: "+Arrays.toString(globalBest.getWeights()));
+        // Write heuristics to file
+        String filename = "heuristics.txt";
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(filename, true));
+            bw.write("Current iteration: "+iterations);
+            bw.write("Best score: "+globalBestScore);
+            bw.write("Best weights: "+Arrays.toString(globalBest.getWeights()));
+            bw.write("-------------------------------");
+            bw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -94,14 +104,5 @@ public class ParticleSwarm {
     public static void main(String[] args) {
         ParticleSwarm ps = new ParticleSwarm();
         Pair<Double, Heuristic> best = ps.run();
-        // Write heuristics to file
-        String filename = "heuristics.txt";
-        try {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
-            bw.write(Arrays.toString(best.getValue().getWeights()));
-            bw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }
