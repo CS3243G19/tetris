@@ -26,11 +26,10 @@ public class ParticleSwarm {
 
     public ParticleSwarm() {
         //Features
+        features.add(new RowsClearedFeature());
         features.add(new RowTransitionsFeature());
         features.add(new ColTransitionsFeature());
         features.add(new HoleFeature());
-        features.add(new MaxHoleHeightFeature());
-        features.add(new BlocksOnHoleFeature());
         features.add(new WellFeature());
         features.add(new UnevenFeature());
 
