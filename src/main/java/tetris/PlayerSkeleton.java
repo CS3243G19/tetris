@@ -21,9 +21,7 @@ public class PlayerSkeleton {
 //        new TFrame(state);
 
         public static final ArrayList<Feature> feature1 = new ArrayList<Feature>();
-        // Maximize
         feature1.add(new RowsClearedFeature());
-        // Minimize
         feature1.add(new RowTransitionsFeature());
         feature1.add(new ColTransitionsFeature());
         feature1.add(new HoleFeature());
