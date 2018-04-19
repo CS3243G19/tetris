@@ -19,7 +19,7 @@ public class PlayerSkeleton {
     }
     public void run() {
         State state = new State();
-        new TFrame(state);
+//        new TFrame(state);
 
         // Maximize
         FEATURES.add(new RowsClearedFeature());
@@ -42,8 +42,8 @@ public class PlayerSkeleton {
         Heuristic heuristic2 = new Heuristic(FEATURES, weights2);
         Heuristic heuristic3 = new Heuristic(FEATURES, weights3);
         HEURISTICS.add(heuristic1);
-        HEURISTICS.add(heuristic2);
-        HEURISTICS.add(heuristic3);
+//        HEURISTICS.add(heuristic2);
+//        HEURISTICS.add(heuristic3);
         Scorer scorer = new Scorer(HEURISTICS);
         scorer.play(false);
 
@@ -128,11 +128,14 @@ public class PlayerSkeleton {
             HashMap<Integer, Integer> topRankedInMove = new HashMap<>();
             for (int i = 0; i < heuristics.size(); i++) {
                 int move = getMove(s, heuristics.get(i));
-                int currVotes = votes.get(move);
-                int topRank = topRankedInMove.get(move);
-                topRank = Math.min(i, topRank);
+                int currVotes = 0;
+                if (votes.containsKey(move)) {
+                     currVotes = votes.get(move);
+                }
+                if (!topRankedInMove.containsKey(move)) {
+                    topRankedInMove.put(move, i);
+                }
                 votes.put(move, currVotes +1 );
-                topRankedInMove.put(move, topRank);
             }
 
             int maxMove = -1;
