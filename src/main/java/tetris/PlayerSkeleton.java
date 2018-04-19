@@ -20,7 +20,7 @@ public class PlayerSkeleton {
         State state = new State();
 //        new TFrame(state);
 
-        public static final ArrayList<Feature> feature1 = new ArrayList<Feature>();
+        ArrayList<Feature> feature1 = new ArrayList<Feature>();
         feature1.add(new RowsClearedFeature());
         feature1.add(new RowTransitionsFeature());
         feature1.add(new ColTransitionsFeature());
