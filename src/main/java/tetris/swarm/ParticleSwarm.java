@@ -26,7 +26,6 @@ public class ParticleSwarm {
 
     public ParticleSwarm() {
         //Features
-        features.add(new RowsClearedFeature());
         features.add(new RowTransitionsFeature());
         features.add(new ColTransitionsFeature());
         features.add(new HoleFeature());
@@ -34,7 +33,6 @@ public class ParticleSwarm {
         features.add(new BlocksOnHoleFeature());
         features.add(new WellFeature());
         features.add(new UnevenFeature());
-        features.add(new TotalHeightFeature());
 
         globalBest = new Heuristic(features);
 
