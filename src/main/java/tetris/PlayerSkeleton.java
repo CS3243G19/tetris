@@ -46,9 +46,11 @@ public class PlayerSkeleton {
         HEURISTICS.add(heuristic3);
 
         Scorer scorer = new Scorer(HEURISTICS);
-        scorer.play(false);
+        for(int i = 0; i < 50; i++) {
+            scorer.play(false);
+        }
 
-        System.out.printf("Rows cleared: %d", scorer.getLatestScore());
+        System.out.printf("Rows cleared: %d", scorer.getAverageScore());
     }
 
     public static class Scorer {
