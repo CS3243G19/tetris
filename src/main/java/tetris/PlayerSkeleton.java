@@ -10,8 +10,6 @@ import static tetris.State.ROWS;
 
 
 public class PlayerSkeleton {
-    public static final ArrayList<Heuristic> HEURISTICS = new ArrayList<>();
-
     public static void main(String[] args) {
         PlayerSkeleton p = new PlayerSkeleton();
         p.run();
@@ -20,24 +18,33 @@ public class PlayerSkeleton {
         State state = new State();
 //        new TFrame(state);
 
-        ArrayList<Feature> feature1 = new ArrayList<Feature>();
-        feature1.add(new RowsClearedFeature());
-        feature1.add(new RowTransitionsFeature());
-        feature1.add(new ColTransitionsFeature());
-        feature1.add(new HoleFeature());
-        feature1.add(new MaxHoleHeightFeature());
-        feature1.add(new BlocksOnHoleFeature());
-        feature1.add(new WellFeature());
-        feature1.add(new UnevenFeature());
-        feature1.add(new TotalHeightFeature());
+        ArrayList<Feature> FEATURES = new ArrayList<>();
+        FEATURES.add(new RowsClearedFeature());
+        FEATURES.add(new RowTransitionsFeature());
+        FEATURES.add(new ColTransitionsFeature());
+        FEATURES.add(new HoleFeature());
+        FEATURES.add(new MaxHoleHeightFeature());
+        FEATURES.add(new BlocksOnHoleFeature());
+        FEATURES.add(new WellFeature());
+        FEATURES.add(new UnevenFeature());
+        FEATURES.add(new TotalHeightFeature());
 
+        //3.5m PSO weights
         Double[] weights1 = {0.1568925886140755, -0.8233209529744112, -0.44592794975510663, -0.9933542921083782, -0.0738032558547442, -0.3493473637407587, -0.6388625428086235, -1.0197401234839614, -0.011791669327957721};
+        //2.6m GA weights
         Double[] weights2 = {0.2947984770276658, -0.04852207418003762, -0.33130033882083265, -0.2273410758386305, -0.44761298613456046, 0.47536562684091355, -0.27931295838987324, -0.486666819161619, 0.009553660751433046};
-        Double[] weights3 = {0.2947984770276658, -0.04852207418003762, -0.34326001649621085, -0.2273410758386305, -0.44761298613456046, 0.47536562684091355, -0.27931295838987324, -0.486666819161619, 0.009553660751433046};
+        //2.7m PSO weights
+        Double[] weights3 = {1.0203320268924947, -0.28559638580090607, 0.21759918672796458, -1.3830732731899043, -0.6701402122976022, -0.42913060205913145, -0.8726148221976193, -1.4449599666963664, -0.13821633236446873};
 
+        Heuristic heuristic1 = new Heuristic(FEATURES, weights1);
+        Heuristic heuristic2 = new Heuristic(FEATURES, weights2);
+        Heuristic heuristic3 = new Heuristic(FEATURES, weights3);
 
-        Heuristic heuristic1 = new Heuristic(feature1, weights1);
+        ArrayList<Heuristic> HEURISTICS = new ArrayList<>();
         HEURISTICS.add(heuristic1);
+        HEURISTICS.add(heuristic2);
+        HEURISTICS.add(heuristic3);
+
         Scorer scorer = new Scorer(HEURISTICS);
         scorer.play(false);
 
